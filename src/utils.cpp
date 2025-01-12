@@ -9,7 +9,7 @@ class FileBuffer
 {
   private:
     uint8_t currentByte;
-    uint8_t* blob;
+    uint8_t* blob= new uint8_t[8];
     size_t bufferPosition;
     size_t bufferSize;
     std::basic_ifstream<uint8_t> buffer;
@@ -17,7 +17,9 @@ class FileBuffer
   public:
     FileBuffer(std::string fileName) : buffer(fileName.c_str(), std::ios::in | std::ios::binary)
     {
-      bufferSize= buffer.gcount();
+      buffer.seekg(0, buffer.end);
+      bufferSize= buffer.tellg();
+      buffer.seekg(0, buffer.beg);
       std::cout << bufferSize << "\n";
 
       if (bufferSize == 0)
@@ -25,8 +27,6 @@ class FileBuffer
         std::cout << "File empty or incorrect filename!" << "\n";
         exit(1);
       }
-
-      buffer.seekg(0, std::ios::beg);
     }
 
     ~FileBuffer()
@@ -36,7 +36,8 @@ class FileBuffer
 
     void seek(size_t position)
     {
-      buffer.seekg(position);
+      bufferPosition= position;
+      buffer.seekg(position, buffer.beg);
       buffer.read(blob, 1);
       currentByte= blob[0];
     }
@@ -44,5 +45,15 @@ class FileBuffer
     uint8_t get()
     {
       return currentByte;
+    }
+
+    size_t getPosition()
+    {
+      return bufferPosition;
+    }
+
+    uint8_t* getWord()
+    {
+      return blob;
     }
 };

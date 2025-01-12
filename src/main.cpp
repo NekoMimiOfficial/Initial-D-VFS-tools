@@ -8,8 +8,8 @@ int main (int argc, char *argv[]) {
   test();
   std::cout << "Printing second byte for file: " << argv[1] << "\n";
   FileBuffer buff(argv[1]);
-  buff.seek(2);
-  uint8_t getTestByte= buff.get();
+  buff.seek(16);
+  uint8_t* getTestByte= buff.getWord();
   std::cout << getTestByte << "\n";
   return 0;
 }
