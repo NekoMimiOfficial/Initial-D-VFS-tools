@@ -1,59 +1,87 @@
+#include <algorithm>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
+#include <ios>
 #include <iostream>
+#include <iterator>
 #include <string>
+#include <vector>
+
+using ifIterator= std::istream_iterator<uint8_t>;
 
 class FileBuffer
 {
   private:
-    uint8_t currentByte;
-    uint8_t* blob= new uint8_t[8];
-    size_t bufferPosition;
-    size_t bufferSize;
-    std::basic_ifstream<uint8_t> buffer;
+    //current byte
+    uint8_t byte;
+    //mainly for making reading the header easier
+    uint8_t* blob= new uint8_t[3];
+    //pointer to current object in vector
+    size_t pointer;
+    //size of buffer and ventor
+    size_t dataSize;
+    //main data from buffer
+    std::vector<uint8_t> data;
 
   public:
-    FileBuffer(std::string fileName) : buffer(fileName.c_str(), std::ios::in | std::ios::binary)
+    FileBuffer(std::string fileName)
     {
+      //initializing and reading size and data from file buffer
+      std::ifstream buffer;
+      buffer.open(fileName.c_str(), std::ios::in | std::ios::binary);
       buffer.seekg(0, buffer.end);
-      bufferSize= buffer.tellg();
+      dataSize= buffer.tellg();
       buffer.seekg(0, buffer.beg);
-      std::cout << bufferSize << "\n";
 
-      if (bufferSize == 0)
+      //check if file is empty
+      if (dataSize == 0)
       {
         std::cout << "File empty or incorrect filename!" << "\n";
         exit(1);
       }
-    }
 
-    ~FileBuffer()
-    {
+      //iterator to copy data from buffer to vector
+      ifIterator iterator(buffer);
+      ifIterator endItr;
+      //stack overflow
+      std::copy(iterator, endItr, std::back_inserter(data));
+
       buffer.close();
     }
 
-    void seek(size_t position)
+    void set(size_t position)
     {
-      bufferPosition= position;
-      buffer.seekg(position, buffer.beg);
-      buffer.read(blob, 1);
-      currentByte= blob[0];
+      //sets pointer and saves new data for current byte and blob
+      pointer= position;
+      byte= data[pointer];
+      blob[0]= data[pointer];
+      blob[1]= data[pointer + 1];
+      blob[2]= data[pointer + 2];
     }
 
-    uint8_t get()
+    uint8_t getb()
     {
-      return currentByte;
+      //get byte
+      return byte;
     }
 
-    size_t getPosition()
+    uint8_t* getw()
     {
-      return bufferPosition;
-    }
-
-    uint8_t* getWord()
-    {
+      //get blob
       return blob;
+    }
+
+    size_t getp()
+    {
+      //get pointer
+      return pointer;
+    }
+
+    size_t gets()
+    {
+      //get data size
+      return dataSize;
     }
 };
