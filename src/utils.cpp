@@ -15,12 +15,12 @@ class FileBuffer
     std::basic_ifstream<uint8_t> buffer;
 
   public:
-    FileBuffer(std::string fileName)
+    FileBuffer(std::string fileName) : buffer(fileName.c_str(), std::ios::in | std::ios::binary)
     {
-      buffer.open(fileName.c_str(), std::ios_base::in | std::ios::binary);
-      bufferSize= buffer.tellg();
+      bufferSize= buffer.gcount();
+      std::cout << bufferSize << "\n";
 
-      if (buffer.good())
+      if (bufferSize == 0)
       {
         std::cout << "File empty or incorrect filename!" << "\n";
         exit(1);

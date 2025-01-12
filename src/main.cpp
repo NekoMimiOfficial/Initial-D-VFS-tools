@@ -4,7 +4,7 @@
 #include <iostream>
 
 int main (int argc, char *argv[]) {
-  FileBuffer buff(argv[1]);
+  FileBuffer buff("./test.bin");
   buff.seek(2);
   uint8_t getTestByte= buff.get();
   std::cout << getTestByte << "\n";
