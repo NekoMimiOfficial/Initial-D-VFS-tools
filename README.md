@@ -4,6 +4,13 @@ including a full reverse engineer of the virtual filesystem found in initial D t
   
 this repo is currently for development and includes no actual patcher until the full process is complete  
 
+# building  
+```sh
+cmake -L ./ \
+make
+```
+The files will be found in the `bin/` directory  
+  
 # credit  
 https://github.com/derplayer/Initial-D-PSP-Tools/wiki/Reserve-engineering-Writeup  
 

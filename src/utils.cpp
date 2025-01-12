@@ -1,39 +1,48 @@
-#ifndef __utils__
-#define __utils__
-
 #include <cstddef>
-#include <iostream>
-#include <fstream>
 #include <cstdint>
-#include <vector>
-#include <iomanip>
+#include <cstdlib>
+#include <fstream>
+#include <iostream>
+#include <string>
 
-class byteManip
+class FileBuffer
 {
   private:
-    char* file_name;
+    uint8_t currentByte;
+    uint8_t* blob;
+    size_t bufferPosition;
+    size_t bufferSize;
+    std::basic_ifstream<uint8_t> buffer;
 
   public:
-    byteManip(char* fname)
+    FileBuffer(std::string fileName)
     {
-      file_name= fname;
+      buffer.open(fileName.c_str(), std::ios_base::in | std::ios::binary);
+      bufferSize= buffer.tellg();
+
+      if (buffer.good())
+      {
+        std::cout << "File empty or incorrect filename!" << "\n";
+        exit(1);
+      }
+
+      buffer.seekg(0, std::ios::beg);
     }
 
-    using byte = std::uint8_t;
+    ~FileBuffer()
+    {
+      buffer.close();
+    }
 
-    void bin(){
-      if (std::ifstream file{ file_name, std::ios::binary } )
-      {
-          const std::size_t nbytes = 1 ;
-          std::vector<char> buff(nbytes) ; 
-          if( file.read( buff.data(), buff.size() ) ) 
-          {
-              size_t nread = file.gcount() ; 
-              std::vector<byte> bytes( buff.begin(), buff.begin() + nread ) ;
-              for( byte b : bytes ) std::cout << std::hex << std::setw(2) << int(b) << ' ' ;
-          }
-      }
+    void seek(size_t position)
+    {
+      buffer.seekg(position);
+      buffer.read(blob, 1);
+      currentByte= blob[0];
+    }
+
+    uint8_t get()
+    {
+      return currentByte;
     }
 };
-
-#endif // !__utils__
