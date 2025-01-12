@@ -14,7 +14,9 @@ include_directories(.)
 
 add_library(utils SHARED ./src/utils.cpp)
 add_library(vfs SHARED ./src/vfs.cpp)
+add_library(test SHARED ./src/test.cpp)
 
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)
 target_link_libraries(${PROJECT_NAME} vfs)
+target_link_libraries(${PROJECT_NAME} test)
