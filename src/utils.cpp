@@ -11,6 +11,12 @@
 
 using ifIterator= std::istream_iterator<uint8_t>;
 
+std::string uc2s(uint8_t *str)
+//[unsigned char to string] converts a uint8_t array to a string
+{
+    return std::string((char *)str);
+}
+
 class FileBuffer
 {
   private:

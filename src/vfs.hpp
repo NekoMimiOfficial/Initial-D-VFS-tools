@@ -1,39 +1,45 @@
 #ifndef __InitDVFS__
 #define __InitDVFS__
 
-#include <cstddef>
-#include <fstream>
+#include "utils.cpp"
+#include <cstdint>
+#include <string>
 #include <vector>
+
 using namespace std;
 
-class VFSdataStruct
-{
-  public:
-    size_t index_pos;
+bool checkXBB(FileBuffer file);
 
-    char* file_begin;
-    size_t file_size;
-    char* file_end;
-    char* file_unhash;
-
-    char* file_data;
-    char* file_name;
-};
-
-class VFSdataCollect
-{
-  public:
-    vector<VFSdataStruct> Files;
-    vector<char*> ByteBlob;
-};
-
-class Data
+class VFSstruct
 {
   private:
-    ifstream VFSFile;
+    uint8_t magicFlag4;
+    uint8_t fileCount;
 
   public:
-    Data(char* fname);
+    VFSstruct();
+};
+
+class ANAstruct
+{
+  private:
+    uint8_t magicFlag4;
+    uint8_t magicFlagD;
+    uint8_t fileCount;
+
+  public:
+    ANAstruct();
+};
+
+class FileData
+{
+  private:
+    std::string fileName;
+    std::vector<uint8_t> data;
+    uint8_t startPointer;
+    uint8_t endPointer;
+    uint8_t size;
+    uint8_t nextFilePointer;
 };
 
 #endif // !__InitDVFS__

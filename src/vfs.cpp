@@ -1,6 +1,10 @@
 #include "vfs.hpp"
+#include <cstdint>
 
-Data::Data(char* fname)
+bool checkXBB(FileBuffer file)
 {
-  VFSFile.open(fname);
+  file.set(0);
+  uint8_t* check= new uint8_t[3];
+  return (uc2s(file.getw()) == "XBB");
 }
+
