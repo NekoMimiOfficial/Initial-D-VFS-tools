@@ -1,6 +1,5 @@
-# Initial D street stage ENG Patch  
-this is a patcher for initial D on the PSP  
-including a full reverse engineer of the virtual filesystem found in initial D titles but mainly the PSP version  
+# Initial D VFS tools, Based on street stage for the PSP  
+this is a tool to extract and repack the virtual filesystem for initial D on the PSP and possibly other initial D titles  
   
 this repo is currently for development and includes no actual patcher until the full process is complete  
 
