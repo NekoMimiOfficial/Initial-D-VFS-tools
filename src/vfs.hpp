@@ -42,4 +42,10 @@ class FileData
     uint8_t nextFilePointer;
 };
 
+namespace VFSreunpack
+{
+  short methodType(FileBuffer file);
+  void unpackXBB(FileBuffer file);
+}
+
 #endif // !__HEADER_VFS
