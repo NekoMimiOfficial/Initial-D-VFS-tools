@@ -1,5 +1,5 @@
-#ifndef __InitDVFS__
-#define __InitDVFS__
+#ifndef __HEADER_VFS
+#define __HEADER_VFS
 
 #include "utils.cpp"
 #include <cstdint>
@@ -42,4 +42,4 @@ class FileData
     uint8_t nextFilePointer;
 };
 
-#endif // !__InitDVFS__
+#endif // !__HEADER_VFS

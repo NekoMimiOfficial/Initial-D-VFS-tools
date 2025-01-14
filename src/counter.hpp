@@ -1,5 +1,5 @@
-#ifndef __COUNTER__
-#define __COUNTER__
+#ifndef __HEADER_COUNTER
+#define __HEADER_COUNTER
 
 #include <cstddef>
 
@@ -17,4 +17,4 @@ class Counter
     bool custom (size_t position);
 };
 
-#endif // !__COUNTER__
+#endif // !__HEADER_COUNTER
