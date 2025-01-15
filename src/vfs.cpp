@@ -5,6 +5,7 @@
 #include <cstddef>
 #include <cstdint>
 #include <string>
+#include <vector>
 
 bool checkXBB(FileBuffer file)
 {
@@ -30,6 +31,8 @@ short VFSreunpack::methodType(FileBuffer file)
 
 void VFSreunpack::filesXBB(FileBuffer file)
 {
+  std::vector<std::string> filenames;
+
   //this new amazing technology allows you to work with binary data easier than ever
   //sponsored by the nerdz and cute catgirrrs :3
   binReader reader(file.getd());
@@ -61,6 +64,16 @@ void VFSreunpack::filesXBB(FileBuffer file)
       slightlyLessDirtyFileName[i]= dirtyFileName[i];
     }
     debug("[VFSreunpack::filesXBB] filename delivered: "+uc2s(slightlyLessDirtyFileName));
+    filenames.push_back(uc2s(slightlyLessDirtyFileName));
+  }
+
+  //print info
+  sprint("Initial D VFS tools         [files]");
+  sprint("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+  sprint("file count: "+std::to_string(fileCount));
+  for (int i= 0; i < filenames.size(); i++)
+  {
+    sprint(filenames[i]);
   }
   
 }
