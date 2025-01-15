@@ -27,7 +27,7 @@ bool binReader::i(size_t x)
 
 bool binReader::s(size_t pos)
 {
-  debug("[binReader::s] setting pointer to: ["+std::to_string(pos)+"/"+std::to_string(size)+"]");
+  debug("[binReader::s] setting pointer to: ["+std::to_string(pos)+"/"+std::to_string(size)+"] => "+l2h(pos));
   if (pos > size || pos < 0) {debug("[binReader::s] set failed, out of bounds"); return false;}
   pointer= pos; return true;
 }

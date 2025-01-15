@@ -12,9 +12,8 @@ void mainCLI(int argc, char* argv[])
     exit(0);
   }
 
-  for (int i= 0; i <= argc; i++)
+  for (int i= 1; i <= argc; i++)
   {
-    if (i == 0){continue;}
     std::string carg= argv[i];
     debug("[mainCLI] argument: "+ carg+" ["+std::to_string(i)+"/"+std::to_string(argc)+"]");
 
