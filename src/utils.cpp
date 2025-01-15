@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <fstream>
+#include <iomanip>
 #include <ios>
 #include <iostream>
 #include <iterator>
@@ -26,6 +27,22 @@ std::string c2s(char* c)
 //[char* to string] converts a char array to a string
 {
   return std::string(c);
+}
+
+template <typename T>
+std::string l2h(T i)
+{
+  std::stringstream stream;
+  stream << "0x" 
+         << std::setfill('0') << std::setw(sizeof(T)*2) 
+         << std::hex << i;
+  return stream.str();
+}
+
+std::string i2h(uint8_t ui)
+{
+  char lookup= "0123456789ABCDEF"[ui];
+  return "0x"+std::to_string(lookup);
 }
 
 void sprint(std::string msg)
@@ -110,6 +127,12 @@ class FileBuffer
     {
       //get data size
       return dataSize;
+    }
+
+    std::vector<uint8_t> getd()
+    {
+      //get the entire vector
+      return data;
     }
 };
 

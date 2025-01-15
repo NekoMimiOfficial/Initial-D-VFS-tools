@@ -17,6 +17,7 @@ add_library(utils SHARED ./src/utils.cpp)
 add_library(vfs SHARED ./src/vfs.cpp)
 add_library(counter SHARED ./src/counter.cpp)
 add_library(cli SHARED ./src/cli.cpp)
+add_library(binaryReader SHARED ./src/binaryReader.cpp)
 
 add_compile_definitions(__DEBUG__=${DBG})
 
@@ -25,3 +26,4 @@ target_link_libraries(${PROJECT_NAME} utils)
 target_link_libraries(${PROJECT_NAME} vfs)
 target_link_libraries(${PROJECT_NAME} counter)
 target_link_libraries(${PROJECT_NAME} cli)
+target_link_libraries(${PROJECT_NAME} binaryReader)
