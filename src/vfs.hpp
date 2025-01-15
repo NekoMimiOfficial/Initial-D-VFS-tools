@@ -46,6 +46,7 @@ namespace VFSreunpack
 {
   short methodType(FileBuffer file);
   void unpackXBB(FileBuffer file);
+  void filesXBB(FileBuffer file);
 }
 
 #endif // !__HEADER_VFS

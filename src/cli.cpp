@@ -1,21 +1,58 @@
 #include "cli.hpp"
 #include "utils.cpp"
+#include "vfs.hpp"
+#include <cstdlib>
+#include <string>
 
 void mainCLI(int argc, char* argv[])
 {
-  if (argc < 2)
+  if (argc < 1)
   {
     sprint("No args provided, run --help for more info.");
     exit(0);
   }
 
-  for (int i= 0; i < argc; i++)
+  for (int i= 0; i <= argc; i++)
   {
-    if (i == 0 || i == 1){continue;}
+    if (i == 0){continue;}
     std::string carg= argv[i];
+    debug("[mainCLI] argument: "+ carg+" ["+std::to_string(i)+"/"+std::to_string(argc)+"]");
 
     if (carg == "--help")
     {CLI::help();}
+
+    if (carg == "--files")
+    {CLI::files();}
+
+    if (carg == "--vfs")
+    {
+      if (i+1 > argc)
+      {
+        sprint("No arguments after --vfs, expected filename");
+        exit(1);
+      }
+      std::string nextARG(argv[i+1]);
+      if (nextARG.rfind("--", 0) == 0)
+      {
+        sprint("Expected filename after --vfs");
+        exit(1);
+      }
+      CLI::VFSfile= nextARG;
+      i++;
+      continue;
+    }
+  }
+}
+
+void CLI::files()
+{
+  debug("[CLI::files] extracting filenames from: "+CLI::VFSfile);
+  FileBuffer buff(CLI::VFSfile);
+  short type= VFSreunpack::methodType(buff);
+  if (type == 0) {sprint("Unsupported file"); exit(1);}
+  if (type == 1) // XBB
+  {
+    VFSreunpack::filesXBB(buff);
   }
 }
 

@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 3.0.0)
+cmake_minimum_required(VERSION 3.2.0)
 project(initial-d-vfs-tools)
+set(DBG 1)
 
 set(OSBitness 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -16,6 +17,8 @@ add_library(utils SHARED ./src/utils.cpp)
 add_library(vfs SHARED ./src/vfs.cpp)
 add_library(counter SHARED ./src/counter.cpp)
 add_library(cli SHARED ./src/cli.cpp)
+
+add_compile_definitions(__DEBUG__=${DBG})
 
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)

@@ -22,9 +22,20 @@ std::string uc2s(uint8_t *str)
     return std::string((char *)str);
 }
 
+std::string c2s(char* c)
+//[char* to string] converts a char array to a string
+{
+  return std::string(c);
+}
+
 void sprint(std::string msg)
 {
   std::cout << msg << "\n";
+}
+
+void debug(std::string msg)
+{
+  if (__DEBUG__){sprint("[DEBUG] "+msg);} //defined from cmake
 }
 
 class FileBuffer
@@ -36,7 +47,7 @@ class FileBuffer
     uint8_t* blob= new uint8_t[3];
     //pointer to current object in vector
     size_t pointer;
-    //size of buffer and ventor
+    //size of buffer and vector
     size_t dataSize;
     //main data from buffer
     std::vector<uint8_t> data;
