@@ -7,9 +7,27 @@
 using str= std::string;
 using vec= std::vector<str>;
 
-namespace cliBOX
+class CLIcontainer
 {
-  void render(str op, vec body, str footer);
+  private:
+    int width;
+
+    str operation;
+    str title;
+    
+    vec body;
+    str footer;
+
+  public:
+    CLIcontainer(str t, int w);
+
+    void seto(str o);
+    void setb(vec b);
+    void setb(str b);
+    void setf(str f);
+    void setw(int w);
+
+    void render();
 };
 
 #endif // !__HEADER_BOX

@@ -21,8 +21,6 @@ str cross= "┼";
 str horizontal= "─";
 str vertical= "│";
 
-int width= 32;
-
 str operator * (str a, unsigned int b) {
     str output = "";
     while (b--) {
@@ -40,40 +38,66 @@ str operator * (unsigned long b, str a) {
 }
 
 
-
-void cliBOX::render(str op, vec body, str footer)
+CLIcontainer::CLIcontainer(str t, int w)
 {
-  str title= "Initial D VFS tools"; int title_len= 19;
-  int usable= 8;
+  title= t;
+  width= w;
+}
+
+void CLIcontainer::seto(str o)
+{operation= o;}
+
+void CLIcontainer::setb(vec b)
+{
+  for (int i= 0; i < b.size(); i++)
+  {body.push_back(b[i]);}
+}
+
+void CLIcontainer::setb(str b)
+{
+  if (b.length() > (width - 2))
+  {
+    for (int i = 0; i < b.length(); i += (width - 2)){
+        body.push_back(b.substr(i, (width - 2)));
+    }
+  }else{body.push_back(b);}
+}
+
+void CLIcontainer::setf(str f)
+{footer= f;}
+
+void CLIcontainer::setw(int w)
+{width= w;}
+
+void CLIcontainer::render()
+{
+  int title_len= title.length();
+  int usable= width - 2 - title_len;
 
   //width checks
   bool fuse= false;
-  if (op.length() > usable) {fuse= true;}
-  else if (footer.length() > 30) {fuse= true;}
-  debug("[cliBOX::render] op, footer clipping status: "+std::to_string(fuse));
+  if (operation.length() > usable) {fuse= true;}
+  else if (footer.length() > (width - 2)) {fuse= true;}
+  debug("[CLIcontainer::render] op, footer clipping status: "+std::to_string(fuse));
 
   for (int i= 0; i < body.size(); i++)
   {
-    if (body[i].length() > 30) {debug("[cliBOX::render] body clipping tripped");}
+    if (body[i].length() > (width - 2)) {debug("[CLIcontainer::render] body clipping tripped");}
   }
 
-  str tspacer= (usable - op.length())*str(" ");
+  str tspacer= (usable - operation.length())*str(" ");
+  str spacer= (usable - operation.length()-1)*str(" ");
 
-  str top= cornerTL+(horizontal * title_len)+(horizontal * (30-20-(op.length())))+Tup+(horizontal * op.length())+cornerTR;
-  str rt= vertical+title+tspacer+"  "+vertical+op+vertical;
-  str bb= Tleft+(horizontal * title_len)+(horizontal * (30-20-(op.length())))+Tdown+(horizontal * op.length())+Tright;
-
-  sprint(top);
-  sprint(rt);
-  sprint(bb);
+  sprint(cornerTL+(horizontal * title_len)+(horizontal * ((width - 2)-(title_len + 1)-(operation.length())))+Tup+(horizontal * operation.length())+cornerTR);
+  sprint(vertical+title+spacer+vertical+operation+vertical);
+  sprint(Tleft+(horizontal * title_len)+(horizontal * ((width - 2)-(title_len + 1)-(operation.length())))+Tdown+(horizontal * operation.length())+Tright);
 
   for (int i= 0; i < body.size(); i++)
   {
-    str bodtxt= vertical+ body[i]+((30-body[i].length())*str(" "))+vertical;
-    sprint(bodtxt);
+    sprint(vertical+ body[i]+ (((width - 2)-body[i].length())*str(" ")) +vertical);
   }
 
-  sprint(Tleft+(horizontal*30)+Tright);
-  sprint(vertical+footer+((30-footer.length())*str(" "))+vertical);
-  sprint(cornerBL+(horizontal*30)+cornerBR);
+  sprint(Tleft+(horizontal*(width - 2))+Tright);
+  sprint(vertical+footer+(((width - 2)-footer.length())*str(" "))+vertical);
+  sprint(cornerBL+(horizontal* (width - 2))+cornerBR);
 }

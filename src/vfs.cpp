@@ -69,6 +69,10 @@ void VFSreunpack::filesXBB(FileBuffer file)
   }
 
   //print info
-  cliBOX::render("files", filenames, "file count: "+std::to_string(fileCount));
+  CLIcontainer box("Initial D VFS tools", 32);
+  box.setf("file count: "+std::to_string(fileCount));
+  box.seto("files");
+  box.setb(filenames);
+  box.render();
   
 }
