@@ -76,9 +76,13 @@ void CLIcontainer::render()
 
   //width checks
   bool fuse= false;
-  if (operation.length() > usable) {fuse= true;}
-  else if (footer.length() > (width - 2)) {fuse= true;}
-  debug("[CLIcontainer::render] op, footer clipping status: "+std::to_string(fuse));
+  if (operation.length() > usable) {fuse= true;}if (title_len > (width - 2))
+  {debug("[CLIcontainer::render] title clipped, this is embarassing >///<");
+  debug("[CLIcontainer::render] attempting to set reasonable values");
+  width= title_len + operation.length() + 8; usable= width - 2 - title_len;}
+  if (footer.length() > (width - 2)) {footer.erase((width-5), str::npos); footer += "...";
+  debug("[CLIcontainer::render] footer clipped, truncating end chars");}
+  debug("[CLIcontainer::render] op clipping status: "+std::to_string(fuse));
   if (fuse)
   {
     sprint("fallback to text rendering, box sizing has clipped");

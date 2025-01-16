@@ -27,6 +27,7 @@ void mainCLI(int argc, char* argv[])
   }
 
   CLI::arg= false;
+  bool filesRun= false;
 
   for (int i= 1; i <= argc; i++)
   {
@@ -34,10 +35,10 @@ void mainCLI(int argc, char* argv[])
     debug("[mainCLI] argument: "+ carg+" ["+std::to_string(i)+"/"+std::to_string(argc)+"]");
 
     if (carg == "--help")
-    {CLI::help();}
+    {CLI::help(); exit(0);}
 
     if (carg == "--files")
-    {CLI::files();}
+    {filesRun= true;}
 
     if (carg == "--vfs")
     {
@@ -58,6 +59,8 @@ void mainCLI(int argc, char* argv[])
       continue;
     }
   }
+
+  if (filesRun) {CLI::files();}
 }
 
 void CLI::files()
