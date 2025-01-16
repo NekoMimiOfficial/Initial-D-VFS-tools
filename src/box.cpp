@@ -79,10 +79,25 @@ void CLIcontainer::render()
   if (operation.length() > usable) {fuse= true;}
   else if (footer.length() > (width - 2)) {fuse= true;}
   debug("[CLIcontainer::render] op, footer clipping status: "+std::to_string(fuse));
+  if (fuse)
+  {
+    sprint("fallback to text rendering, box sizing has clipped");
+    sprint(" ");
+    sprint(title+"    ["+operation+"]");
+    sprint((title_len * str("~"))+(5 * str("~"))+((operation.length()+1) * str("~")));
+    for (int i= 0; i < body.size(); i++)
+    {
+      sprint(body[i]);
+    }
+    sprint((title_len + 6 + operation.length())*str("~"));
+    sprint(footer);
+    return;
+  }
 
   for (int i= 0; i < body.size(); i++)
   {
-    if (body[i].length() > (width - 2)) {debug("[CLIcontainer::render] body clipping tripped");}
+    if (body[i].length() > (width - 2)) {body[i].erase((width - 5), str::npos); body[i]= body[i]+"..."; 
+      debug("[CLIcontainer::render] body clipping tripped");}
   }
 
   str tspacer= (usable - operation.length())*str(" ");
