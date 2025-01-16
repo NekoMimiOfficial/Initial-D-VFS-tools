@@ -87,7 +87,11 @@ void CLI::help()
   hb.push_back("");
   hb.push_back("--help      shows this help message");
   hb.push_back("--files     shows files inside a VFS");
+  hb.push_back("--info      shows information about a VFS");
   hb.push_back("--extract   extract the files from a VFS");
+  hb.push_back("--pack      pack files into a VFS");
+  hb.push_back("--files     set the files to pack into a VFS");
+  hb.push_back("             to set multiple use (file1, file2)");
   hb.push_back("--vfs       set the VFS file to work on");
   box.setb(hb);
   box.setf("provided by the catgirrrs :3");
