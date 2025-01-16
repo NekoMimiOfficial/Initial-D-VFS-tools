@@ -1,6 +1,7 @@
 #include "vfs.hpp"
 #include "binaryReader.cpp"
 #include "binaryReader.hpp"
+#include "box.hpp"
 #include "utils.cpp"
 #include <cstddef>
 #include <cstdint>
@@ -68,12 +69,6 @@ void VFSreunpack::filesXBB(FileBuffer file)
   }
 
   //print info
-  sprint("Initial D VFS tools         [files]");
-  sprint("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
-  sprint("file count: "+std::to_string(fileCount));
-  for (int i= 0; i < filenames.size(); i++)
-  {
-    sprint(filenames[i]);
-  }
+  cliBOX::render("files", filenames, "file count: "+std::to_string(fileCount));
   
 }
