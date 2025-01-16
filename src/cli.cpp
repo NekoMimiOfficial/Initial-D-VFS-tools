@@ -12,6 +12,8 @@ void mainCLI(int argc, char* argv[])
     exit(0);
   }
 
+  CLI::arg= false;
+
   for (int i= 1; i <= argc; i++)
   {
     std::string carg= argv[i];
@@ -37,6 +39,7 @@ void mainCLI(int argc, char* argv[])
         exit(1);
       }
       CLI::VFSfile= nextARG;
+      CLI::arg= true;
       i++;
       continue;
     }
@@ -45,6 +48,8 @@ void mainCLI(int argc, char* argv[])
 
 void CLI::files()
 {
+  if (!(CLI::arg)) {sprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+
   debug("[CLI::files] extracting filenames from: "+CLI::VFSfile);
   FileBuffer buff(CLI::VFSfile);
   short type= VFSreunpack::methodType(buff);

@@ -8,6 +8,7 @@ void mainCLI(int argc, char* argv[]);
 namespace CLI
 {
   std::string VFSfile;
+  bool arg;
 
   void help();
   void files();
