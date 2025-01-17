@@ -95,7 +95,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   //read file count
   size_t fc= reader.read();
   //seek to header and beyond
-  reader.s(32);
+  reader.s(0x20);
 
   //reading part
   
@@ -133,7 +133,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   }
 
   //skip metablob
-  reader.s(ptr_f[0]-2);
+  reader.s(ptr_f[0]);
   
   //the dirty filename sift
   for (int i= 0; i < fc; i++)
@@ -173,19 +173,19 @@ void VFSreunpack::infoXBB(FileBuffer file)
   }
 
   //display
-  CLIcontainer box("Initial D VFS Tools", 32);
+  CLIcontainer box("Initial D VFS Tools", 36);
   box.seto("info");
   box.setf("file count: "+std::to_string(fc));
   svec boxb;
-  for (size_t i= 0; i < fc; i++)
+  for (size_t i= 0; i < int(fc); i++)
   {
     boxb.push_back(packs[i].fileName);
     boxb.push_back((packs[i].fileName.length()*str("~")) );
-    boxb.push_back("[index]            ["+strc(packs[i].index + 1)+"/"+strc(fc)+"]");
-    boxb.push_back("[start pointer]    "+l2h(packs[i].PTRstart));
-    boxb.push_back("[end pointer]      "+l2h(packs[i].PTRend));
-    boxb.push_back("[filename pointer] "+l2h(packs[i].PTRfname));
-    boxb.push_back("[CRC32]            "+l2h(packs[i].crc32));
+    boxb.push_back("[index]                 ["+strc(packs[i].index + 1)+"/"+strc(fc)+"]");
+    boxb.push_back("[start pointer]         "+l2h(packs[i].PTRstart));
+    boxb.push_back("[end pointer]           "+l2h(packs[i].PTRend));
+    boxb.push_back("[filename pointer]      "+l2h(packs[i].PTRfname));
+    boxb.push_back("[CRC32]                 "+l2h(packs[i].crc32));
 
     if (i < (fc - 1)) {boxb.push_back("<BOX::SEP>");}
   }

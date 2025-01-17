@@ -19,6 +19,8 @@ class binReader
     bool i(size_t x);
     // set custom counter position
     bool s(size_t pos);
+    // decrement counter
+    bool d();
     // return data and increment once
     uint8_t read();
     //return array of data and increment as each byte returns

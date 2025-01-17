@@ -3,8 +3,11 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
+#include <string>
 #include <utility>
 #include <vector>
+
+#define cstr std::to_string
 
 binReader::binReader(std::vector<uint8_t> vec) : data{std::move(vec)}
 {
@@ -17,13 +20,19 @@ bool binReader::i(size_t x)
   bool returnVal= false;
   for (size_t i= 0; i < x; i++)
   {
-    debug("[binReader::i] incrementing pointer to: ["+std::to_string(pointer+1)+"/"+std::to_string(size)+"] => "+l2h(pointer+1));
+    debug("[binReader::i] incrementing pointer to: ["+std::to_string(pointer+1)+"/"+std::to_string(size)+"] => "+l2h(pointer+0x1)+"::"+cstr(data[pointer+1]));
     if (pointer+1 >= size){returnVal= false; debug("[binReader::i] increment failed, out of bounds"); break;}
     else{pointer++; returnVal= true;}
   }
   return returnVal;
 }
 
+bool binReader::d()
+{
+  if (pointer <= 0) {return false;}
+  debug("[binReader::d] decrementing pointer to: ["+std::to_string(pointer+1)+"/"+std::to_string(size)+"] => "+l2h(pointer+1));
+  pointer--; return true;
+}
 
 bool binReader::s(size_t pos)
 {

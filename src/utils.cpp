@@ -72,6 +72,13 @@ str operator * (unsigned long b, str a) {
     return output;
 }
 
+void save2file(std::vector<uint8_t> v, std::string fn)
+{
+  std::ofstream outfile(fn);
+  std::ostream_iterator<uint8_t> outitr(outfile);
+  std::copy(v.begin(), v.end(), outitr);
+}
+
 class FileBuffer
 {
   private:
@@ -91,10 +98,8 @@ class FileBuffer
     {
       //initializing and reading size and data from file buffer
       std::ifstream buffer;
-      buffer.open(fileName.c_str(), std::ios::in | std::ios::binary);
-      buffer.seekg(0, buffer.end);
+      buffer.open(fileName.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
       dataSize= buffer.tellg();
-      buffer.seekg(0, buffer.beg);
 
       //check if file is empty
       if (dataSize == 0)
@@ -103,12 +108,11 @@ class FileBuffer
         exit(1);
       }
 
-      //iterator to copy data from buffer to vector
-      ifIterator iterator(buffer);
-      ifIterator endItr;
-      //stack overflow
-      std::copy(iterator, endItr, std::back_inserter(data));
+      data.resize(dataSize);
+      buffer.seekg(0, std::ios::beg);
+      buffer.read(reinterpret_cast<char *>(data.data()), dataSize);
 
+      save2file(data, "test.bin");
       buffer.close();
     }
 
