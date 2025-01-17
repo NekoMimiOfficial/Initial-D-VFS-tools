@@ -29,6 +29,7 @@ void mainCLI(int argc, char* argv[])
   CLI::arg= false;
   bool filesRun= false;
   bool infoRun= false;
+  bool extractRun= false;
 
   for (int i= 1; i <= argc; i++)
   {
@@ -43,6 +44,9 @@ void mainCLI(int argc, char* argv[])
 
     if (carg == "--info")
     {infoRun= true;}
+
+    if (carg == "--extract")
+    {extractRun= true;}
 
     if (carg == "--vfs")
     {
@@ -66,6 +70,7 @@ void mainCLI(int argc, char* argv[])
 
   if (filesRun) {CLI::files();}
   if (infoRun) {CLI::info();}
+  if (extractRun) {CLI::extract();}
 }
 
 void CLI::files()
@@ -90,6 +95,18 @@ void CLI::info()
   if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB
   {VFSreunpack::infoXBB(buff);}
+}
+
+void CLI::extract()
+{
+  if (!(CLI::arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+
+  debug("[CLI::extract] extracting files from: "+CLI::VFSfile);
+  FileBuffer buff(CLI::VFSfile);
+  short type= VFSreunpack::methodType(buff);
+  if (type == 0) {bprint("Unsupported file"); exit(1);}
+  if (type == 1) // XBB
+  {VFSreunpack::extractXBB(buff);}
 }
 
 void CLI::help()

@@ -112,7 +112,6 @@ class FileBuffer
       buffer.seekg(0, std::ios::beg);
       buffer.read(reinterpret_cast<char *>(data.data()), dataSize);
 
-      save2file(data, "test.bin");
       buffer.close();
     }
 
