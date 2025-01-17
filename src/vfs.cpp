@@ -95,7 +95,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   //read file count
   size_t fc= reader.read();
   //seek to header and beyond
-  reader.s(30);
+  reader.s(32);
 
   //reading part
   
@@ -133,7 +133,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   }
 
   //skip metablob
-  reader.i(fc * 8);
+  reader.s(ptr_f[0]-2);
   
   //the dirty filename sift
   for (int i= 0; i < fc; i++)
