@@ -28,6 +28,7 @@ void mainCLI(int argc, char* argv[])
 
   CLI::arg= false;
   bool filesRun= false;
+  bool infoRun= false;
 
   for (int i= 1; i <= argc; i++)
   {
@@ -39,6 +40,9 @@ void mainCLI(int argc, char* argv[])
 
     if (carg == "--files")
     {filesRun= true;}
+
+    if (carg == "--info")
+    {infoRun= true;}
 
     if (carg == "--vfs")
     {
@@ -61,6 +65,7 @@ void mainCLI(int argc, char* argv[])
   }
 
   if (filesRun) {CLI::files();}
+  if (infoRun) {CLI::info();}
 }
 
 void CLI::files()
@@ -70,11 +75,21 @@ void CLI::files()
   debug("[CLI::files] extracting filenames from: "+CLI::VFSfile);
   FileBuffer buff(CLI::VFSfile);
   short type= VFSreunpack::methodType(buff);
-  if (type == 0) {sprint("Unsupported file"); exit(1);}
+  if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB
-  {
-    VFSreunpack::filesXBB(buff);
-  }
+  {VFSreunpack::filesXBB(buff);}
+}
+
+void CLI::info()
+{
+  if (!(CLI::arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+
+  debug("[CLI::info] showing info for files from: "+CLI::VFSfile);
+  FileBuffer buff(CLI::VFSfile);
+  short type= VFSreunpack::methodType(buff);
+  if (type == 0) {bprint("Unsupported file"); exit(1);}
+  if (type == 1) // XBB
+  {VFSreunpack::infoXBB(buff);}
 }
 
 void CLI::help()

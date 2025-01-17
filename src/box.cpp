@@ -21,22 +21,6 @@ str cross= "┼";
 str horizontal= "─";
 str vertical= "│";
 
-str operator * (str a, unsigned int b) {
-    str output = "";
-    while (b--) {
-        output += a;
-    }
-    return output;
-}
-
-str operator * (unsigned long b, str a) {
-    str output = "";
-    while (b--) {
-        output += a;
-    }
-    return output;
-}
-
 
 CLIcontainer::CLIcontainer(str t, int w)
 {
@@ -113,7 +97,9 @@ void CLIcontainer::render()
 
   for (int i= 0; i < body.size(); i++)
   {
-    sprint(vertical+ body[i]+ (((width - 2)-body[i].length())*str(" ")) +vertical);
+    if (body[i] == "<BOX::SEP>"){
+    sprint(Tleft+ ((width - 2)*horizontal) +Tright);}else{
+    sprint(vertical+ body[i]+ (((width - 2)-body[i].length())*str(" ")) +vertical);}
   }
 
   sprint(Tleft+(horizontal*(width - 2))+Tright);

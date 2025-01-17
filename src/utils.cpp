@@ -13,6 +13,7 @@
 #include <string>
 #include <vector>
 
+using str= std::string;
 using ifIterator= std::istream_iterator<uint8_t>;
 
 std::string __version__= "0.0.1";
@@ -53,6 +54,22 @@ void sprint(std::string msg)
 void debug(std::string msg)
 {
   if (__DEBUG__){sprint("[DEBUG] "+msg);} //defined from cmake
+}
+
+str operator * (str a, unsigned int b) {
+    str output = "";
+    while (b--) {
+        output += a;
+    }
+    return output;
+}
+
+str operator * (unsigned long b, str a) {
+    str output = "";
+    while (b--) {
+        output += a;
+    }
+    return output;
 }
 
 class FileBuffer

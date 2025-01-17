@@ -12,6 +12,7 @@ namespace CLI
 
   void help();
   void files();
+  void info();
 }
 
 #endif // !__HEADER_CLI
