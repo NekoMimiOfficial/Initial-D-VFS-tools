@@ -79,6 +79,8 @@ void save2file(std::vector<uint8_t> v, std::string fn)
   std::copy(v.begin(), v.end(), outitr);
 }
 
+void save2file()
+
 class FileBuffer
 {
   private:

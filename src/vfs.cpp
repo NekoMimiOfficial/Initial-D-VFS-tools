@@ -3,6 +3,7 @@
 #include "binaryReader.hpp"
 #include "box.hpp"
 #include "utils.cpp"
+#include "crc.cpp"
 #include <cstddef>
 #include <cstdint>
 #include <filesystem>
@@ -132,13 +133,11 @@ void VFSreunpack::infoXBB(FileBuffer file)
     ptr_f.push_back(filePTR);
     crc.push_back(hash);
   }
-
-  //skip metablob
-  reader.s(ptr_f[0]);
   
   //the dirty filename sift
   for (int i= 0; i < fc; i++)
   {
+    reader.s(ptr_f[i]);
     std::vector<uint8_t> dirtyFileName;
     while (true)
     {
@@ -179,6 +178,12 @@ void VFSreunpack::infoXBB(FileBuffer file)
   svec boxb;
   for (size_t i= 0; i < int(fc); i++)
   {
+    CRC32 crack;
+    uint8_t* cruffer= new uint8_t[packs[i].data.size()];
+    std::copy(packs[i].data.begin(), packs[i].data.end(), cruffer);
+    crack.Update(cruffer, packs[i].data.size());
+    uint32_t crchash= crack.GetValue();
+    
     boxb.push_back(packs[i].fileName);
     boxb.push_back((packs[i].fileName.length()*str("~")) );
     boxb.push_back("[index]                 ["+strc(packs[i].index + 1)+"/"+strc(fc)+"]");
@@ -186,6 +191,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
     boxb.push_back("[end pointer]           "+l2h(packs[i].PTRend));
     boxb.push_back("[filename pointer]      "+l2h(packs[i].PTRfname));
     boxb.push_back("[CRC32]                 "+l2h(packs[i].crc32));
+    boxb.push_back("[custom CRC]            "+l2h(crchash));
 
     if (i < (fc - 1)) {boxb.push_back("<BOX::SEP>");}
   }
@@ -241,13 +247,11 @@ void VFSreunpack::extractXBB(FileBuffer file)
     ptr_f.push_back(filePTR);
     crc.push_back(hash);
   }
-
-  //skip metablob
-  reader.s(ptr_f[0]);
   
   //the dirty filename sift
   for (int i= 0; i < fc; i++)
   {
+    reader.s(ptr_f[i]);
     std::vector<uint8_t> dirtyFileName;
     while (true)
     {
@@ -295,5 +299,7 @@ void VFSreunpack::extractXBB(FileBuffer file)
       toRead--; packs[i].data.push_back(reader.read());
     }
     save2file(packs[i].data, "./EXTRACTED/"+filename);
+    sprint("Extracted file: "+filename);
+    debug("[VFSreunpack::extractXBB] {"+l2h(packs[i].PTRstart)+" -> "+l2h(packs[i].PTRstart+packs[i].PTRend)+"} => "+filename);
   }
 }

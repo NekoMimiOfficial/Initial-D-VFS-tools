@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2.0)
-project(initial-d-vfs-tools)
+project(vfs-crc-poly-brute-9000)
 set(DBG 1)
 
 set(OSBitness 32)
@@ -13,19 +13,15 @@ set (CMAKE_RUNTIME_OUTPUT_DIRECTORY "${FullOutputDir}")
 
 include_directories(.)
 
-add_library(utils SHARED ./src/utils.cpp)
-add_library(vfs SHARED ./src/vfs.cpp)
-add_library(cli SHARED ./src/cli.cpp)
-add_library(binaryReader SHARED ./src/binaryReader.cpp)
-add_library(box SHARED ./src/box.cpp)
-add_library(crc SHARED ./src/crc.cpp)
+add_library(utils SHARED ./utils.cpp)
+add_library(binaryReader SHARED ./binaryReader.cpp)
+add_library(box SHARED ./box.cpp)
+add_library(crc SHARED ./crc.cpp)
 
 add_compile_definitions(__DEBUG__=${DBG})
 
-add_executable(${PROJECT_NAME} ./src/main.cpp)
+add_executable(${PROJECT_NAME} ./main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)
-target_link_libraries(${PROJECT_NAME} vfs)
-target_link_libraries(${PROJECT_NAME} cli)
 target_link_libraries(${PROJECT_NAME} binaryReader)
 target_link_libraries(${PROJECT_NAME} box)
 target_link_libraries(${PROJECT_NAME} crc)
