@@ -91,4 +91,4 @@ jobs:
         # The file contents of any hidden files in the path should be validated before
         # enabled this to avoid uploading sensitive information.
         # Optional. Default is 'false'
-        include-hidden-files:
+        include-hidden-files: false
