@@ -14,6 +14,7 @@ class binReader
 
   public:
     binReader(std::vector<uint8_t> vec);
+    ~binReader();
 
     // increment counter
     bool i(size_t x);

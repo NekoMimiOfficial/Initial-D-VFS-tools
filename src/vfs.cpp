@@ -34,6 +34,11 @@ short VFSreunpack::methodType(FileBuffer file)
   uint8_t* header= vfs.getw();
 
   if (uc2s(header) == "XBB"){return 1;}
+  if (uc2s(header) == "@AN")
+  {
+    file.set(0x03);
+    if (file.getb() == 0x41){return 2;}
+  }
 
   return 0;
 }
@@ -302,4 +307,40 @@ void VFSreunpack::extractXBB(FileBuffer file)
     sprint("Extracted file: "+filename);
     debug("[VFSreunpack::extractXBB] {"+l2h(packs[i].PTRstart)+" -> "+l2h(packs[i].PTRstart+packs[i].PTRend)+"} => "+filename);
   }
+}
+
+void VFSreunpack::filesANA(FileBuffer file)
+{
+  binReader reader(file.getd());
+
+  CLIcontainer box("Initial D VFS tools", 36);
+  box.seto("files");
+
+  reader.s(0x10);
+  uint8_t fc= reader.read();
+  reader.s(0x20);
+
+  vec filenames;
+
+  for (int i= 0; i < fc; i++)
+  {
+    uint8_t* fb_ptr= reader.read(4);
+    uint8_t* fr_ptr= reader.read(4);
+
+    std::vector<uint8_t> fnb;
+    while (1)
+    {
+      uint8_t rb= reader.read();
+      if (rb == 0x0) {break;}
+      fnb.push_back(rb);
+    }
+    uint8_t* fnameinunint8= new uint8_t[fnb.size()];
+    for (int i= 0; i < fnb.size(); i++)
+    {fnameinunint8[i]= fnb[i];}
+    filenames.push_back(uc2s(fnameinunint8));
+  }
+
+  box.setf("file count: "+to_string(fc));
+  box.setb(filenames);
+  box.render();
 }

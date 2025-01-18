@@ -28,10 +28,12 @@ class XBBstruct
 namespace VFSreunpack
 {
   short methodType(FileBuffer file);
-  void unpackXBB(FileBuffer file);
+  
   void filesXBB(FileBuffer file);
   void infoXBB(FileBuffer file);
   void extractXBB(FileBuffer file);
+
+  void filesANA(FileBuffer file);
 }
 
 #endif // !__HEADER_VFS

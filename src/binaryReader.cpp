@@ -2,6 +2,7 @@
 #include "utils.cpp"
 #include <cstddef>
 #include <cstdint>
+#include <cstdio>
 #include <cstdlib>
 #include <string>
 #include <utility>
@@ -13,6 +14,11 @@ binReader::binReader(std::vector<uint8_t> vec) : data{std::move(vec)}
 {
   size= data.size();
   pointer= 0;
+}
+
+binReader::~binReader()
+{
+  data.clear();
 }
 
 bool binReader::i(size_t x)

@@ -83,6 +83,8 @@ void CLI::files()
   if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB
   {VFSreunpack::filesXBB(buff);}
+  if (type == 2) //ANA
+  {VFSreunpack::filesANA(buff);}
 }
 
 void CLI::info()
