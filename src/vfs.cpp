@@ -18,6 +18,20 @@ using lvec= std::vector<uint32_t>;
 
 #define strc std::to_string
 
+std::string executeCommand(std::string command) {
+  std::string output = "";
+    FILE* pipe = popen(command.c_str(), "r");
+    if (!pipe) {
+        return "Error: failed to execute command.";
+    }
+    char buffer[128];
+    while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
+        output += buffer;
+    }
+    pclose(pipe);
+    return output;
+}
+
 bool checkXBB(FileBuffer file)
 {
   file.set(0);
@@ -293,10 +307,11 @@ void VFSreunpack::extractXBB(FileBuffer file)
   }
   
   #ifdef _WIN32
-  std::mkdir("EXTRACTED");
+    executeCommand("mkdir EXTRACTED");
   #else
-  std::filesystem::create_directory("./EXTRACTED");
+    std::filesystem::create_directory("./EXTRACTED");
   #endif
+
   for (size_t i= 0; i < fc; i++)
   {
     uint32_t fileStart= packs[i].PTRstart;
