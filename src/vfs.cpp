@@ -293,7 +293,7 @@ void VFSreunpack::extractXBB(FileBuffer file)
   }
   
   #ifdef _WIN32
-  _mkdir("EXTRACTED");
+  std::mkdir("EXTRACTED");
   #else
   std::filesystem::create_directory("./EXTRACTED");
   #endif
