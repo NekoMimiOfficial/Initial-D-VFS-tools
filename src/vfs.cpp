@@ -9,6 +9,8 @@
 #include <filesystem>
 #include <string>
 #include <vector>
+#include <sys/stat.h>
+#include <sys/types.h>
 
 using svec= std::vector<std::string>;
 using bvec= std::vector<uint8_t>;
@@ -289,8 +291,12 @@ void VFSreunpack::extractXBB(FileBuffer file)
 
     packs.push_back(pack);
   }
-
+  
+  #ifdef _WIN32
+  _mkdir("EXTRACTED");
+  #else
   std::filesystem::create_directory("./EXTRACTED");
+  #endif
   for (size_t i= 0; i < fc; i++)
   {
     uint32_t fileStart= packs[i].PTRstart;
