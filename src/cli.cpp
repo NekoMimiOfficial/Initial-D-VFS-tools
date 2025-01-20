@@ -117,6 +117,8 @@ void CLI::extract()
   if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB
   {VFSreunpack::extractXBB(buff);}
+  if (type == 2) //ANA
+  {VFSreunpack::extractANA(buff);}
 }
 
 void CLI::help()

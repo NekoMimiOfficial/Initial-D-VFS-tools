@@ -39,22 +39,14 @@ short VFSreunpack::methodType(FileBuffer file)
   // 1 -> XBB
   // 2 -> ANA
 
-  FileBuffer vfs= file;
-  vfs.set(0x00);
-  uint8_t* header= new uint8_t[3];
-  header[0]= vfs.getb(); vfs.set(0x01);
-  header[1]= vfs.getb(); vfs.set(0x02);
-  header[2]= vfs.getb();
+  file.set(0);
+  if (file.getb() == 0x58)
+  {file.set(1); if (file.getb() == 0x42) {file.set(2); if (file.getb() == 0x42) {return 1;}}}
+  
+  file.set(0);
+  if (file.getb() == 0x40)
+  {file.set(1); if (file.getb() == 0x41) {file.set(2); if (file.getb() == 0x4E) {file.set(3); if (file.getb() == 0x41) {return 2;}}}}
 
-  if (uc2s(header) == "XBB"){return 1;}
-  if (uc2s(header) == "@AN")
-  {
-    file.set(0x03);
-    if (file.getb() == 0x41){return 2;}
-  }
-
-  delete[] header;
-  vfs.clear();
   return 0;
 }
 
@@ -422,4 +414,73 @@ void VFSreunpack::infoANA(FileBuffer file)
   box.setb(writeBody);
   box.setf("file count: "+to_string(fc));
   box.render();
+}
+
+void VFSreunpack::extractANA(FileBuffer file)
+{
+  binReader reader(file.getd());
+
+  //file count
+  reader.s(0x10);
+  uint8_t fc= reader.read();
+
+  //skip header
+  reader.s(0x20);
+
+  //list of ANA files
+  std::vector<ANAstruct> ANAfiles;
+
+  //box contents
+  vector<std::string> writeBody;
+
+  for (size_t i= 0; i < fc; i++)
+  {
+    ANAstruct file;
+    file.index= i+1;
+    file.PTRstart= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
+    file.PTRend= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
+
+    vector<uint8_t> getFileName;
+    while (1)
+    {
+      uint8_t rb= reader.read();
+      if (rb == 0x0) {break;}
+      getFileName.push_back(rb);
+    }
+    uint8_t* fileNameArray= new uint8_t[getFileName.size()];
+    for (size_t i= 0; i < getFileName.size(); i++)
+    {fileNameArray[i]= getFileName[i];}
+    file.filename= uc2s(fileNameArray);
+    delete[] fileNameArray;
+
+    ANAfiles.push_back(file);
+  }
+
+  for (size_t i= 0; i < fc; i++)
+  {
+    reader.s(ANAfiles[i].PTRstart);
+    uint32_t toRead= ANAfiles[i].PTRend;
+    while (1)
+    {ANAfiles[i].data.push_back(reader.read()); if (toRead == 0){break;}else{toRead--;}}
+    debug("[VFSreunpack::extractANA] pushed data of size ("+to_string(ANAfiles[i].data.size())+") to file: "+ANAfiles[i].filename+" i:"+to_string(ANAfiles[i].index));
+    debug("                          ptr end:"+l2h(ANAfiles[i].PTRend));
+  }
+
+  uint32_t ANTptr= ANAfiles[fc-1].PTRstart + ANAfiles[fc-1].PTRend;
+  uint32_t ANTend= file.gets();
+
+  //create directory
+  #ifdef _WIN32
+    executeCommand("mkdir EXTRACTED");
+  #else
+    std::filesystem::create_directory("./EXTRACTED");
+  #endif
+
+  for (ANAstruct ana : ANAfiles)
+  {
+    std::string filename= "./EXTRACTED/" + ana.filename + "(" + to_string(ana.index) + ").GIM";
+    save2file(ana.data, filename);
+    sprint("Extracted file: "+filename);
+    debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+to_string(ana.data.size())+")bytes => "+filename);
+  }
 }

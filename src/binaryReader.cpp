@@ -55,17 +55,21 @@ uint8_t binReader::read()
     debug("[binReader::read] pointer has exceeded vector size");
     exit(1);
   }
+  debug("[binReader::read] reading 1 byte");
   uint8_t read= data[pointer];
   i(1);
+  debug("[binReader::read] ------------1b");
   return read;
 }
 
 uint8_t* binReader::read(size_t count)
 {
+  debug("[binReader::read] reading "+std::to_string(count)+" bytes");
   uint8_t* buff= new uint8_t[count];
   for (size_t i= 0; i < count; i++)
   {
     buff[i]= read();
   }
+  debug("[binReader::read] ------------"+std::to_string(count)+"b");
   return buff;
 }
