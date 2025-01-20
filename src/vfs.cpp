@@ -34,19 +34,19 @@ using lvec= std::vector<uint32_t>;
 
 #define strc std::to_string
 
-std::string executeCommand(std::string command) {
-  std::string output = "";
-    FILE* pipe = popen(command.c_str(), "r");
-    if (!pipe) {
-        return "Error: failed to execute command.";
-    }
-    char buffer[128];
-    while (fgets(buffer, sizeof(buffer), pipe) != NULL) {
-        output += buffer;
-    }
-    pclose(pipe);
-    return output;
-}
+/*std::string executeCommand(std::string command) {*/
+/*  std::string output = "";*/
+/*    FILE* pipe = popen(command.c_str(), "r");*/
+/*    if (!pipe) {*/
+/*        return "Error: failed to execute command.";*/
+/*    }*/
+/*    char buffer[128];*/
+/*    while (fgets(buffer, sizeof(buffer), pipe) != NULL) {*/
+/*        output += buffer;*/
+/*    }*/
+/*    pclose(pipe);*/
+/*    return output;*/
+/*}*/
 
 short VFSreunpack::methodType(FileBuffer file)
 {
@@ -322,13 +322,8 @@ void VFSreunpack::extractXBB(FileBuffer file)
     packs.push_back(pack);
   }
   
-  #ifdef _WIN32
-    executeCommand("mkdir EXTRACTED");
-    executeCommand("mkdir EXTRACTED/"+file.filename_no_ext);
-  #else
-    fs::create_directory("./EXTRACTED");
-    fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
-  #endif
+  fs::create_directory("./EXTRACTED");
+  fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
 
   for (size_t i= 0; i < fc; i++)
   {
@@ -497,13 +492,8 @@ void VFSreunpack::extractANA(FileBuffer file)
   uint32_t ANTend= file.gets();
 
   //create directory
-  #ifdef _WIN32
-    executeCommand("mkdir EXTRACTED");
-    executeCommand("mkdir EXTRACTED/"+file.filename_no_ext);
-  #else
-    fs::create_directory("./EXTRACTED");
-    fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
-  #endif
+  fs::create_directory("./EXTRACTED");
+  fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
 
   for (ANAstruct ana : ANAfiles)
   {

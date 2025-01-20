@@ -16,12 +16,12 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [ubuntu-20.04, ubuntu-20.04-arm, windows-latest]
+        os: [ubuntu-latest, ubuntu-20.04-arm, windows-latest]
         build_type: [Release]
         c_compiler: [gcc, cl]
         cpp_compiler: [g++, cl]
         include:
-          - os: ubuntu-20.04
+          - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
           - os: ubuntu-20.04-arm
@@ -32,7 +32,7 @@ jobs:
             cpp_compiler: cl
 
         exclude:
-          - os: ubuntu-20.04
+          - os: ubuntu-latest
             c_compiler: cl
             cpp_compiler: cl
           - os: ubuntu-20.04-arm
