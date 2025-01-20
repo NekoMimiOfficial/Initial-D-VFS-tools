@@ -1,10 +1,6 @@
 cmake_minimum_required(VERSION 3.2.0)
 project(initial-d-vfs-tools)
 
-set(OSBitness 32)
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(OSBitness 64)
-endif()
 set (FullOutputDir "${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}")
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${FullOutputDir}/static libs")
 set (CMAKE_LIBRARY_OUTPUT_DIRECTORY "${FullOutputDir}")
@@ -18,6 +14,10 @@ add_library(cli SHARED ./src/cli.cpp)
 add_library(binaryReader SHARED ./src/binaryReader.cpp)
 add_library(box SHARED ./src/box.cpp)
 add_library(crc SHARED ./src/crc.cpp)
+
+if(CMAKE_SYSTEM_NAME EQUAL Windows)
+  target_compile_definitions(__WIN32)
+endif()
 
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)
