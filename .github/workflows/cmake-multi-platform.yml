@@ -16,26 +16,14 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [ubuntu-20.04, windows-latest, ubuntu-20.04-arm]
+        os: [ubuntu-20.04, ubuntu-20.04-arm]
         build_type: [Release]
-        c_compiler: [gcc, cl]
+        c_compiler: [g++]
         include:
-          # - os: windows-latest
-            # c_compiler: cl
-            # cpp_compiler: cl
           - os: ubuntu-20.04
-            c_compiler: gcc
-            cpp_compiler: g++
+            c_compiler: g++
           - os: ubuntu-20.04-arm
-            c_compiler: gcc
-            cpp_compiler: g++
-        exclude:
-          # - os: windows-latest
-            # c_compiler: gcc
-          - os: ubuntu-20.04
-            c_compiler: cl
-          - os: ubuntu-20.04-arm
-            c_compiler: cl
+            c_compiler: g++
 
     steps:
     - uses: actions/checkout@v4
@@ -48,21 +36,17 @@ jobs:
 
     - name: Configure CMake
       run: >
-        cmake -B ${{ steps.strings.outputs.build-output-dir }}
-        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
-        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
-        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
-        -S ${{ github.workspace }}
+        cmake -L ${{ github.workspace }}
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
         # Name of the artifact to upload.
         # Optional. Default is 'artifact'
-        name: VFS-Tools-Nightly
+        name: VFS-Tools-Nightly-${{ matrix.os }}
 
         # A file, directory or wildcard pattern that describes what to upload
         # Required.
