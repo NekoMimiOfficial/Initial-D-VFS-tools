@@ -298,9 +298,9 @@ void VFSreunpack::extractXBB(FileBuffer file)
   }
   
   #ifdef _WIN32
-    executeCommand("mkdir EXTRACTED");
+    executeCommand("mkdir EXTRACTED/"+file.filename_no_ext);
   #else
-    std::filesystem::create_directory("./EXTRACTED");
+    std::filesystem::create_directory("./EXTRACTED/"+file.filename_no_ext);
   #endif
 
   for (size_t i= 0; i < fc; i++)
@@ -315,8 +315,8 @@ void VFSreunpack::extractXBB(FileBuffer file)
       if (toRead <= 0) {break;}
       toRead--; packs[i].data.push_back(reader.read());
     }
-    save2file(packs[i].data, "./EXTRACTED/"+filename);
-    sprint("Extracted file: "+filename);
+    save2file(packs[i].data, "./EXTRACTED/"+file.filename_no_ext+"/"+filename);
+    sprint("Extracted file: ./EXTRACTED/"+file.filename_no_ext+"/"+filename);
     debug("[VFSreunpack::extractXBB] {"+l2h(packs[i].PTRstart)+" -> "+l2h(packs[i].PTRstart+packs[i].PTRend)+"} => "+filename);
   }
 }
@@ -473,12 +473,12 @@ void VFSreunpack::extractANA(FileBuffer file)
   #ifdef _WIN32
     executeCommand("mkdir EXTRACTED");
   #else
-    std::filesystem::create_directory("./EXTRACTED");
+    std::filesystem::create_directory("./EXTRACTED/"+file.filename_no_ext);
   #endif
 
   for (ANAstruct ana : ANAfiles)
   {
-    std::string filename= "./EXTRACTED/" + ana.filename + "(" + to_string(ana.index) + ").GIM";
+    std::string filename= "./EXTRACTED/" + file.filename_no_ext + "/" + ana.filename + "(" + to_string(ana.index) + ").GIM";
     save2file(ana.data, filename);
     sprint("Extracted file: "+filename);
     debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+to_string(ana.data.size())+")bytes => "+filename);

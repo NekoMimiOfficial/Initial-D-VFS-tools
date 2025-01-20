@@ -92,8 +92,20 @@ class FileBuffer
     std::vector<uint8_t> data;
 
   public:
+    std::string filename;
+    std::string filename_no_ext= "";
+    std::string ext= "";
+    std::string ext_with_dot;
+
     FileBuffer(std::string fileName)
     {
+      //setting filename and ext
+      int dotLoc= fileName.rfind('.', fileName.npos);
+      for (int i= 0; i < dotLoc; i++) {filename_no_ext += fileName[i];}
+      for (int i= (dotLoc+1); i < fileName.length(); i++) {ext += fileName[i];}
+      ext_with_dot= "."+ext; filename= fileName;
+      debug("[FileBuffer::FileBuffer] filename: ("+filename_no_ext+") extension: ("+ext+")");
+
       //initializing and reading size and data from file buffer
       std::ifstream buffer;
       buffer.open(fileName.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
