@@ -17,11 +17,13 @@ using str= std::string;
 using ifIterator= std::istream_iterator<uint8_t>;
 
 std::string __version__= "1.0.0";
+bool __APP_DEBUG__= false;
 
 std::string uc2s(uint8_t *str)
 //[unsigned char to string] converts a uint8_t array to a string
 {
-    return std::string((char *)str);
+  std::string res= (char*)str;
+  return res;
 }
 
 std::string c2s(char* c)
@@ -53,7 +55,7 @@ void sprint(std::string msg)
 
 void debug(std::string msg)
 {
-  if (__DEBUG__){sprint("[DEBUG] "+msg);} //defined from cmake
+  if (__APP_DEBUG__){std::cout << "[DEBUG] " << msg;} //defined from cmake
 }
 
 str operator * (str a, unsigned int b) {

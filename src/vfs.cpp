@@ -276,8 +276,18 @@ void VFSreunpack::extractXBB(FileBuffer file)
     {
       slightlyLessDirtyFileName[i]= dirtyFileName[i];
     }
-    debug("[VFSreunpack::infoXBB] filename delivered: "+uc2s(slightlyLessDirtyFileName));
-    filenames.push_back(uc2s(slightlyLessDirtyFileName));
+    std::string fn= uc2s(slightlyLessDirtyFileName);
+
+    //fix absurd bug causing buffers that shouldnt even run to merge with the filename
+    //ps: this fix limits extension lenths to 3, including hard limiting it (in case the ext is 2 chars long)
+    int dotLocation= fn.rfind('.', fn.npos);
+    std::string cleanFN= "";
+    for (int i= 0; i < (dotLocation + 4); i++)
+    {cleanFN += fn[i];}
+    fn= cleanFN;
+
+    debug("[VFSreunpack::infoXBB] filename delivered: "+fn);
+    filenames.push_back(fn);
   }
 
   //set data for each struct
@@ -298,8 +308,10 @@ void VFSreunpack::extractXBB(FileBuffer file)
   }
   
   #ifdef _WIN32
+    executeCommand("mkdir EXTRACTED");
     executeCommand("mkdir EXTRACTED/"+file.filename_no_ext);
   #else
+    std::filesystem::create_directory("./EXTRACTED");
     std::filesystem::create_directory("./EXTRACTED/"+file.filename_no_ext);
   #endif
 
@@ -472,7 +484,9 @@ void VFSreunpack::extractANA(FileBuffer file)
   //create directory
   #ifdef _WIN32
     executeCommand("mkdir EXTRACTED");
+    executeCommand("mkdir EXTRACTED/"+file.filename_no_ext);
   #else
+    std::filesystem::create_directory("./EXTRACTED");
     std::filesystem::create_directory("./EXTRACTED/"+file.filename_no_ext);
   #endif
 

@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.2.0)
 project(initial-d-vfs-tools)
-set(DBG 0)
 
 set(OSBitness 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -19,8 +18,6 @@ add_library(cli SHARED ./src/cli.cpp)
 add_library(binaryReader SHARED ./src/binaryReader.cpp)
 add_library(box SHARED ./src/box.cpp)
 add_library(crc SHARED ./src/crc.cpp)
-
-add_compile_definitions(__DEBUG__=${DBG})
 
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)
