@@ -16,14 +16,31 @@ jobs:
       fail-fast: false
 
       matrix:
-        os: [ubuntu-20.04, ubuntu-20.04-arm]
+        os: [ubuntu-20.04, ubuntu-20.04-arm, windows-latest]
         build_type: [Release]
-        c_compiler: [g++]
+        c_compiler: [gcc, cl]
+        cpp_compiler: [g++, cl]
         include:
           - os: ubuntu-20.04
-            c_compiler: g++
+            c_compiler: gcc
+            cpp_compiler: g++
           - os: ubuntu-20.04-arm
-            c_compiler: g++
+            c_compiler: gcc
+            cpp_compiler: g++
+          - os: windows-latest
+            c_compiler: cl
+            cpp_compiler: cl
+
+        exclude:
+          - os: ubuntu-20.04
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: ubuntu-20.04-arm
+            c_compiler: cl
+            cpp_compiler: cl
+          - os: windows-latest
+            c_compiler: gcc
+            cpp_compiler: g++
 
     steps:
     - uses: actions/checkout@v4
@@ -36,10 +53,14 @@ jobs:
 
     - name: Configure CMake
       run: >
-        cmake -L ${{ github.workspace }}
+        cmake -B ${{ steps.strings.outputs.build-output-dir }}
+        -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
+        -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+        -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+        -S ${{ github.workspace }}
 
     - name: Build
-      run: cmake --build ${{ steps.strings.outputs.build-output-dir }}
+      run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4

@@ -24,4 +24,27 @@ some metadata and unknown stuff
 
 raw data (including the header) and a small amount of unknown data at the end of each file segment
 --------------------------------------------------------------------------------------------------
+
+[ANA Files]
+--------------------------------------------------------------------------------------------------
+XXXX ....  .... ....
+Y... ....  .... ....
+X: @ANA header
+Y: file count
+
+this section below will continue a set amount of times (file count)
+XXXX YYYY  ZZZZ ZZZ.
+(read in big endian, so 4<-3<-2<-1)
+>>> uint32_t pointer= buffer[0] | (buffer[1] << 8) | (buffer[2] << 16) | (buffer[3] << 24);
+X: file start pointer
+Y: amount of bytes to read after the start pointer
+Z: partial file name (terminated by a hex 0x00)
+
+some metadata and unknown stuff
+
+raw data (including the header)
+
+@ANT section (after start pointer + amount to read, of the last file)
+this is a shared colour pallet that is appended to every GIM file
+__________________________________________________________________________________________________
 ```
