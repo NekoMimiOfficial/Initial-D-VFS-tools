@@ -32,13 +32,10 @@ jobs:
         exclude:
           # - os: windows-latest
             # c_compiler: gcc
-            # cpp_compiler: g++
           - os: ubuntu-20.04
             c_compiler: cl
-            cpp_compiler: cl
           - os: ubuntu-20.04-arm
             c_compiler: cl
-            cpp_compiler: cl
 
     steps:
     - uses: actions/checkout@v4
