@@ -47,6 +47,24 @@ void CLIcontainer::setb(str b)
   }else{body.push_back(b);}
 }
 
+void CLIcontainer::clearb()
+{
+  body.clear();
+}
+
+void CLIcontainer::clearo() {
+    if (boxSize > 0) {
+        std::cout << "\x1b[2K";
+        for (int i = 1; i < boxSize; i++) {
+            std::cout
+            << "\x1b[1A"
+            << "\x1b[2K";
+        }
+        std::cout << "\r";
+    }
+}
+
+
 void CLIcontainer::setf(str f)
 {footer= f;}
 
@@ -105,4 +123,6 @@ void CLIcontainer::render()
   sprint(Tleft+(horizontal*(width - 2))+Tright);
   sprint(vertical+footer+(((width - 2)-footer.length())*str(" "))+vertical);
   sprint(cornerBL+(horizontal* (width - 2))+cornerBR);
+
+  boxSize= 6+body.size();
 }

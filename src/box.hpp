@@ -1,6 +1,7 @@
 #ifndef __HEADER_BOX
 #define __HEADER_BOX
 
+#include <cstddef>
 #include <string>
 #include <vector>
 
@@ -18,6 +19,8 @@ class CLIcontainer
     vec body;
     str footer;
 
+    size_t boxSize;
+
   public:
     CLIcontainer(str t, int w);
 
@@ -26,6 +29,8 @@ class CLIcontainer
     void setb(str b);
     void setf(str f);
     void setw(int w);
+    void clearb();
+    void clearo();
 
     void render();
 };

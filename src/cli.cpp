@@ -9,6 +9,12 @@
 using str= std::string;
 using vec= std::vector<str>;
 
+bool arg= false;
+bool filesRun= false;
+bool infoRun= false;
+bool extractRun= false;
+std::string VFSfile;
+
 void bprint(str txt)
 {
   CLIcontainer box("Initial D VFS tools", 35);
@@ -26,11 +32,7 @@ void mainCLI(int argc, char* argv[])
     exit(0);
   }
 
-  CLI::arg= false;
-  bool filesRun= false;
-  bool infoRun= false;
-  bool extractRun= false;
-
+  
   for (int i= 1; i <= argc; i++)
   {
     std::string carg= argv[i];
@@ -61,8 +63,8 @@ void mainCLI(int argc, char* argv[])
         bprint("Expected filename after --vfs");
         exit(1);
       }
-      CLI::VFSfile= nextARG;
-      CLI::arg= true;
+      arg= true;
+      VFSfile= nextARG;
       i++;
       continue;
     }
@@ -71,40 +73,46 @@ void mainCLI(int argc, char* argv[])
   if (filesRun) {CLI::files();}
   if (infoRun) {CLI::info();}
   if (extractRun) {CLI::extract();}
+
+  return;
 }
 
 void CLI::files()
 {
-  if (!(CLI::arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+  if (!(arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
 
-  debug("[CLI::files] extracting filenames from: "+CLI::VFSfile);
-  FileBuffer buff(CLI::VFSfile);
-  short type= VFSreunpack::methodType(buff);
+  debug("[CLI::files] extracting filenames from: "+VFSfile);
+  FileBuffer filesBuff(VFSfile);
+  short type= VFSreunpack::methodType(filesBuff);
   if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB
-  {VFSreunpack::filesXBB(buff);}
+  {VFSreunpack::filesXBB(filesBuff);}
   if (type == 2) //ANA
-  {VFSreunpack::filesANA(buff);}
+  {VFSreunpack::filesANA(filesBuff);}
+
+  return;
 }
 
 void CLI::info()
 {
-  if (!(CLI::arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+  if (!(arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
 
-  debug("[CLI::info] showing info for files from: "+CLI::VFSfile);
-  FileBuffer buff(CLI::VFSfile);
-  short type= VFSreunpack::methodType(buff);
+  debug("[CLI::info] showing info for files from: "+VFSfile);
+  FileBuffer infoBuff(VFSfile);
+  short type= VFSreunpack::methodType(infoBuff);
   if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB
-  {VFSreunpack::infoXBB(buff);}
+  {VFSreunpack::infoXBB(infoBuff);}
+  if (type == 2) // ANA
+  {VFSreunpack::infoANA(infoBuff);}
 }
 
 void CLI::extract()
 {
-  if (!(CLI::arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+  if (!(arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
 
-  debug("[CLI::extract] extracting files from: "+CLI::VFSfile);
-  FileBuffer buff(CLI::VFSfile);
+  debug("[CLI::extract] extracting files from: "+VFSfile);
+  FileBuffer buff(VFSfile);
   short type= VFSreunpack::methodType(buff);
   if (type == 0) {bprint("Unsupported file"); exit(1);}
   if (type == 1) // XBB

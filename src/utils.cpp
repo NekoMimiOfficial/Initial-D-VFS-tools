@@ -84,8 +84,6 @@ class FileBuffer
   private:
     //current byte
     uint8_t byte;
-    //mainly for making reading the header easier
-    uint8_t* blob= new uint8_t[3];
     //pointer to current object in vector
     size_t pointer;
     //size of buffer and vector
@@ -114,30 +112,34 @@ class FileBuffer
       
       if (data.size() != dataSize)
       {debug("[FileBuffer::FileBuffer] read size mismatch, corrupt data vector");}
+      debug("[FileBuffer::FileBuffer] read data ("+fileName+"): "+std::to_string(dataSize)+" bytes");
 
       buffer.close();
     }
 
+    ~FileBuffer()
+    {
+      data.clear();
+    }
+
+    void clear()
+    {
+      data.clear();
+    }
+
     void set(size_t position)
     {
+      if ((position < 0) || (position > dataSize)) {return;}
+
       //sets pointer and saves new data for current byte and blob
       pointer= position;
       byte= data[pointer];
-      blob[0]= data[pointer];
-      blob[1]= data[pointer + 1];
-      blob[2]= data[pointer + 2];
     }
 
     uint8_t getb()
     {
       //get byte
       return byte;
-    }
-
-    uint8_t* getw()
-    {
-      //get blob
-      return blob;
     }
 
     size_t getp()

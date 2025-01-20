@@ -25,6 +25,17 @@ class XBBstruct
     uint32_t crc32;
 };
 
+class ANAstruct
+{
+  public:
+    std::string filename;
+    std::vector<uint8_t> data;
+
+    uint32_t PTRstart;
+    uint32_t PTRend;
+    size_t index;
+};
+
 namespace VFSreunpack
 {
   short methodType(FileBuffer file);
@@ -34,6 +45,8 @@ namespace VFSreunpack
   void extractXBB(FileBuffer file);
 
   void filesANA(FileBuffer file);
+  void infoANA(FileBuffer file);
+  void extractANA(FileBuffer file);
 }
 
 #endif // !__HEADER_VFS

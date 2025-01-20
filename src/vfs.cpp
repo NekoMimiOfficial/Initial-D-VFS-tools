@@ -6,6 +6,7 @@
 #include "crc.cpp"
 #include <cstddef>
 #include <cstdint>
+#include <cstdlib>
 #include <filesystem>
 #include <string>
 #include <vector>
@@ -32,13 +33,6 @@ std::string executeCommand(std::string command) {
     return output;
 }
 
-bool checkXBB(FileBuffer file)
-{
-  file.set(0);
-  uint8_t* check= new uint8_t[3];
-  return (uc2s(file.getw()) == "XBB");
-}
-
 short VFSreunpack::methodType(FileBuffer file)
 {
   // 0 -> Unknown
@@ -47,7 +41,10 @@ short VFSreunpack::methodType(FileBuffer file)
 
   FileBuffer vfs= file;
   vfs.set(0x00);
-  uint8_t* header= vfs.getw();
+  uint8_t* header= new uint8_t[3];
+  header[0]= vfs.getb(); vfs.set(0x01);
+  header[1]= vfs.getb(); vfs.set(0x02);
+  header[2]= vfs.getb();
 
   if (uc2s(header) == "XBB"){return 1;}
   if (uc2s(header) == "@AN")
@@ -56,6 +53,8 @@ short VFSreunpack::methodType(FileBuffer file)
     if (file.getb() == 0x41){return 2;}
   }
 
+  delete[] header;
+  vfs.clear();
   return 0;
 }
 
@@ -363,5 +362,64 @@ void VFSreunpack::filesANA(FileBuffer file)
 
   box.setf("file count: "+to_string(fc));
   box.setb(filenames);
+  box.render();
+}
+
+void VFSreunpack::infoANA(FileBuffer file)
+{
+  binReader reader(file.getd());
+  CLIcontainer box("Initial D VFS tools", 36);
+  box.seto("info");
+
+  //file count
+  reader.s(0x10);
+  uint8_t fc= reader.read();
+
+  //skip header
+  reader.s(0x20);
+
+  //list of ANA files
+  std::vector<ANAstruct> ANAfiles;
+
+  //box contents
+  vector<std::string> writeBody;
+
+  for (size_t i= 0; i < fc; i++)
+  {
+    ANAstruct file;
+    file.index= i+1;
+    file.PTRstart= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
+    file.PTRend= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
+
+    vector<uint8_t> getFileName;
+    while (1)
+    {
+      uint8_t rb= reader.read();
+      if (rb == 0x0) {break;}
+      getFileName.push_back(rb);
+    }
+    uint8_t* fileNameArray= new uint8_t[getFileName.size()];
+    for (size_t i= 0; i < getFileName.size(); i++)
+    {fileNameArray[i]= getFileName[i];}
+    file.filename= uc2s(fileNameArray);
+    delete[] fileNameArray;
+
+    ANAfiles.push_back(file);
+  }
+
+  for (ANAstruct ana : ANAfiles)
+  {
+    writeBody.push_back(ana.filename);
+    writeBody.push_back(str("~") * ana.filename.length());
+    writeBody.push_back("[index]                 ["+to_string(ana.index)+"/"+to_string(fc)+"]");
+    writeBody.push_back("[start pointer]         "+l2h(ana.PTRstart));
+    writeBody.push_back("[end pointer]           "+l2h(ana.PTRend));
+
+    if (!(ana.index == fc))
+    {writeBody.push_back("<BOX::SEP>");}
+  }
+
+  box.setb(writeBody);
+  box.setf("file count: "+to_string(fc));
   box.render();
 }

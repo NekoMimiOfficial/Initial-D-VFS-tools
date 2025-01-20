@@ -5,11 +5,15 @@
 #include <string>
 void mainCLI(int argc, char* argv[]);
 
+class runARGs
+{
+  public:
+    bool arg;
+    std::string VFSfile;
+};
+
 namespace CLI
 {
-  std::string VFSfile;
-  bool arg;
-
   void help();
   void files();
   void info();
