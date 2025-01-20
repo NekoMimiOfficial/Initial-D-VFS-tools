@@ -15,7 +15,7 @@ add_library(binaryReader SHARED ./src/binaryReader.cpp)
 add_library(box SHARED ./src/box.cpp)
 add_library(crc SHARED ./src/crc.cpp)
 
-if(CMAKE_SYSTEM_NAME EQUAL Windows)
+if(CMAKE_SYSTEM_NAME EQUAL "Windows")
   target_compile_definitions(__WIN32)
 endif()
 
