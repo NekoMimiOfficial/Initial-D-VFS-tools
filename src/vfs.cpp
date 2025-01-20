@@ -11,14 +11,15 @@
 #include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <filesystem>
 
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+#ifndef __WIN32
+#include <filesystem>
+namespace fs= std::filesystem;
+#endif
 
 using svec= std::vector<std::string>;
 using bvec= std::vector<uint8_t>;
 using lvec= std::vector<uint32_t>;
-namespace fs= std::filesystem;
 
 #define strc std::to_string
 
@@ -309,9 +310,11 @@ void VFSreunpack::extractXBB(FileBuffer file)
 
     packs.push_back(pack);
   }
-  
+ 
+  #ifndef __WIN32
   fs::create_directory("./EXTRACTED");
   fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
+  #endif
 
   for (size_t i= 0; i < fc; i++)
   {
@@ -325,7 +328,12 @@ void VFSreunpack::extractXBB(FileBuffer file)
       if (toRead <= 0) {break;}
       toRead--; packs[i].data.push_back(reader.read());
     }
+
+    #ifndef __WIN32
     save2file(packs[i].data, "./EXTRACTED/"+file.filename_no_ext+"/"+filename);
+    #else
+    save2file(packs[i].data, filename);
+    #endif
     sprint("Extracted file: ./EXTRACTED/"+file.filename_no_ext+"/"+filename);
     debug("[VFSreunpack::extractXBB] {"+l2h(packs[i].PTRstart)+" -> "+l2h(packs[i].PTRstart+packs[i].PTRend)+"} => "+filename);
   }
@@ -480,12 +488,18 @@ void VFSreunpack::extractANA(FileBuffer file)
   uint32_t ANTend= file.gets();
 
   //create directory
+  #ifndef __WIN32
   fs::create_directory("./EXTRACTED");
   fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
+  #endif
 
   for (ANAstruct ana : ANAfiles)
   {
-    std::string filename= "./EXTRACTED/" + file.filename_no_ext + "/" + ana.filename + "(" + to_string(ana.index) + ").GIM";
+    #ifndef __WIN32
+    std::string filename= "./EXTRACTED/" + file.filename_no_ext + "/" + ana.filename + "(" + to_string(ana.index) + ").gim";
+    #else
+    std::string filename= ana.filename + "(" +to_string(ana.index) + ").gim";
+    #endif
     save2file(ana.data, filename);
     sprint("Extracted file: "+filename);
     debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+to_string(ana.data.size())+")bytes => "+filename);

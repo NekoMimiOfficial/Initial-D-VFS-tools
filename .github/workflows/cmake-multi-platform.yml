@@ -23,7 +23,7 @@ jobs:
           - os: ubuntu-latest
             c_compiler: gcc
             cpp_compiler: g++
-          - os: ubuntu-20.04-arm
+          - os: ubuntu-24.04-arm
             c_compiler: gcc
             cpp_compiler: g++
           - os: windows-latest
