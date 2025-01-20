@@ -7,7 +7,6 @@
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
-#include <filesystem>
 #include <string>
 #include <vector>
 #include <sys/stat.h>
@@ -27,6 +26,8 @@
      namespace fs = boost::filesystem;
 #  endif
 #endif
+
+#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 
 using svec= std::vector<std::string>;
 using bvec= std::vector<uint8_t>;
