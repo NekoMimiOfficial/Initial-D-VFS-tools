@@ -11,27 +11,14 @@
 #include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
-
-#ifndef __has_include
-  static_assert(false, "__has_include not supported");
-#else
-#  if __cplusplus >= 201703L && __has_include(<filesystem>)
-#    include <filesystem>
-     namespace fs = std::filesystem;
-#  elif __has_include(<experimental/filesystem>)
-#    include <experimental/filesystem>
-     namespace fs = std::experimental::filesystem;
-#  elif __has_include(<boost/filesystem.hpp>)
-#    include <boost/filesystem.hpp>
-     namespace fs = boost::filesystem;
-#  endif
-#endif
+#include <filesystem>
 
 #define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
 
 using svec= std::vector<std::string>;
 using bvec= std::vector<uint8_t>;
 using lvec= std::vector<uint32_t>;
+namespace fs= std::filesystem;
 
 #define strc std::to_string
 
