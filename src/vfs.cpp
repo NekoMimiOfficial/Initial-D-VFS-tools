@@ -193,11 +193,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   svec boxb;
   for (size_t i= 0; i < int(fc); i++)
   {
-    CRC32 crack;
-    uint8_t* cruffer= new uint8_t[packs[i].data.size()];
-    std::copy(packs[i].data.begin(), packs[i].data.end(), cruffer);
-    crack.Update(cruffer, packs[i].data.size());
-    uint32_t crchash= crack.GetValue();
+    uint32_t crchash= crc32(packs[i].data, 0xffffffff);
     
     boxb.push_back(packs[i].fileName);
     boxb.push_back((packs[i].fileName.length()*str("~")) );
