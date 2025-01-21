@@ -48,8 +48,10 @@ jobs:
 
     - name: Set windows specific files
       if: ${{ contains(matrix.os, 'windows-latest') }}
-      run: >
-        move /Y "${{ github.workspace }}\src\win_vfs.cpp" "${{ github.workspace }}\src\vfs.cpp"
+      with:
+        python-vesion: 3.10
+        run: |
+          python "${{ github.workspace }}\win_script.py" "${{ github.workspace }}"
 
     - name: Configure CMake
       run: >
