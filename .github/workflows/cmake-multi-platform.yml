@@ -46,12 +46,14 @@ jobs:
       run: |
         echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
 
-    - name: Set windows specific files
+    - name: Setup python for helper scripts
+      uses: actions/setup-python@v5 
+
+    - name: Run windows script
       if: ${{ contains(matrix.os, 'windows-latest') }}
+      run: python "${{ github.workspace }}\win_script.py" "${{ github.workspace }}"
       with:
-        python-vesion: 3.10
-        run: |
-          python "${{ github.workspace }}\win_script.py" "${{ github.workspace }}"
+        python-version: '3.10'
 
     - name: Configure CMake
       run: >
