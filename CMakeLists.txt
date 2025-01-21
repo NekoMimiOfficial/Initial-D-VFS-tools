@@ -15,14 +15,6 @@ add_library(binaryReader SHARED ./src/binaryReader.cpp)
 add_library(box SHARED ./src/box.cpp)
 add_library(crc SHARED ./src/crc.cpp)
 
-if(CMAKE_SYSTEM_NAME EQUAL "Windows")
-  target_compile_definitions(__WIN32)
-endif()
-
-if(WIN32)
-  target_compile_definitions(__WIN32)
-endif()
-
 add_executable(${PROJECT_NAME} ./src/main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)
 target_link_libraries(${PROJECT_NAME} vfs)
