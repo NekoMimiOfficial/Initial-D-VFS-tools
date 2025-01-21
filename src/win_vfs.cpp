@@ -11,10 +11,6 @@
 #include <vector>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <filesystem>
-
-namespace fs= std::filesystem;
-
 
 using svec= std::vector<std::string>;
 using bvec= std::vector<uint8_t>;
@@ -310,9 +306,6 @@ void VFSreunpack::extractXBB(FileBuffer file)
     packs.push_back(pack);
   }
  
-  fs::create_directory("./EXTRACTED");
-  fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
-
   for (size_t i= 0; i < fc; i++)
   {
     uint32_t fileStart= packs[i].PTRstart;
@@ -326,7 +319,7 @@ void VFSreunpack::extractXBB(FileBuffer file)
       toRead--; packs[i].data.push_back(reader.read());
     }
 
-    save2file(packs[i].data, "./EXTRACTED/"+file.filename_no_ext+"/"+filename);
+    save2file(packs[i].data, filename);
     sprint("Extracted file: ./EXTRACTED/"+file.filename_no_ext+"/"+filename);
     debug("[VFSreunpack::extractXBB] {"+l2h(packs[i].PTRstart)+" -> "+l2h(packs[i].PTRstart+packs[i].PTRend)+"} => "+filename);
   }
@@ -481,12 +474,11 @@ void VFSreunpack::extractANA(FileBuffer file)
   uint32_t ANTend= file.gets();
 
   //create directory
-  fs::create_directory("./EXTRACTED");
-  fs::create_directory("./EXTRACTED/"+file.filename_no_ext);
+  //removed on windows cause worflows borked
 
   for (ANAstruct ana : ANAfiles)
   {
-    std::string filename= "./EXTRACTED/" + file.filename_no_ext + "/" + ana.filename + "(" + to_string(ana.index) + ").gim";
+    std::string filename= ana.filename + "(" +to_string(ana.index) + ").gim";
     save2file(ana.data, filename);
     sprint("Extracted file: "+filename);
     debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+to_string(ana.data.size())+")bytes => "+filename);
