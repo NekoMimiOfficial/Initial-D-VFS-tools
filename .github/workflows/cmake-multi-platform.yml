@@ -48,12 +48,12 @@ jobs:
 
     - name: Setup python for helper scripts
       uses: actions/setup-python@v5 
+      with:
+        python-version: '3.10'
 
     - name: Run windows script
       if: ${{ contains(matrix.os, 'windows-latest') }}
       run: python "${{ github.workspace }}\win_script.py" "${{ github.workspace }}"
-      with:
-        python-version: '3.10'
 
     - name: Configure CMake
       run: >
