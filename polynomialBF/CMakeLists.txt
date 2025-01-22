@@ -1,6 +1,5 @@
 cmake_minimum_required(VERSION 3.2.0)
 project(vfs-crc-poly-brute-9000)
-set(DBG 1)
 
 set(OSBitness 32)
 if(CMAKE_SIZEOF_VOID_P EQUAL 8)
@@ -17,8 +16,6 @@ add_library(utils SHARED ./utils.cpp)
 add_library(binaryReader SHARED ./binaryReader.cpp)
 add_library(box SHARED ./box.cpp)
 add_library(crc SHARED ./crc.cpp)
-
-add_compile_definitions(__DEBUG__=${DBG})
 
 add_executable(${PROJECT_NAME} ./main.cpp)
 target_link_libraries(${PROJECT_NAME} utils)

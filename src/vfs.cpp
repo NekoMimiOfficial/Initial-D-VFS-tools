@@ -186,6 +186,18 @@ void VFSreunpack::infoXBB(FileBuffer file)
     packs.push_back(pack);
   }
 
+  //populate data for each file in XBB
+  for (size_t i= 0; i < fc; i++)
+  {
+    reader.s(packs[i].PTRstart);
+    uint32_t toRead= packs[i].PTRend;
+    while (1)
+    {
+      packs[i].data.push_back(reader.read());
+      if (toRead == 0){break;}else{toRead--;}
+    }
+  }
+
   //display
   CLIcontainer box("Initial D VFS Tools", 36);
   box.seto("info");
@@ -193,6 +205,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   svec boxb;
   for (size_t i= 0; i < int(fc); i++)
   {
+    sprint(to_string(packs[i].data[0]));
     uint32_t crchash= crc32(packs[i].data, 0xffffffff);
     
     boxb.push_back(packs[i].fileName);

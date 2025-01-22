@@ -16,12 +16,14 @@
 using str= std::string;
 using ifIterator= std::istream_iterator<uint8_t>;
 
-std::string __version__= "0.0.1";
+std::string __version__= "1.0.0";
+bool __APP_DEBUG__= false;
 
 std::string uc2s(uint8_t *str)
 //[unsigned char to string] converts a uint8_t array to a string
 {
-    return std::string((char *)str);
+  std::string res= (char*)str;
+  return res;
 }
 
 std::string c2s(char* c)
@@ -53,7 +55,7 @@ void sprint(std::string msg)
 
 void debug(std::string msg)
 {
-  if (__DEBUG__){sprint("[DEBUG] "+msg);} //defined from cmake
+  if (__APP_DEBUG__){std::cout << "[DEBUG] " << msg;} //defined from cmake
 }
 
 str operator * (str a, unsigned int b) {
@@ -72,11 +74,10 @@ str operator * (unsigned long b, str a) {
     return output;
 }
 
-void save2file(std::vector<uint8_t> v, std::string fn)
+void save2file(uint32_t v, std::string fn)
 {
-  std::ofstream outfile(fn);
-  std::ostream_iterator<uint8_t> outitr(outfile);
-  std::copy(v.begin(), v.end(), outitr);
+  std::ofstream outfile(fn, std::ofstream::binary);
+  outfile.write((char*) &v, sizeof(v));
 }
 
 class FileBuffer
@@ -84,8 +85,6 @@ class FileBuffer
   private:
     //current byte
     uint8_t byte;
-    //mainly for making reading the header easier
-    uint8_t* blob= new uint8_t[3];
     //pointer to current object in vector
     size_t pointer;
     //size of buffer and vector
@@ -94,8 +93,20 @@ class FileBuffer
     std::vector<uint8_t> data;
 
   public:
+    std::string filename;
+    std::string filename_no_ext= "";
+    std::string ext= "";
+    std::string ext_with_dot;
+
     FileBuffer(std::string fileName)
     {
+      //setting filename and ext
+      int dotLoc= fileName.rfind('.', fileName.npos);
+      for (int i= 0; i < dotLoc; i++) {filename_no_ext += fileName[i];}
+      for (int i= (dotLoc+1); i < fileName.length(); i++) {ext += fileName[i];}
+      ext_with_dot= "."+ext; filename= fileName;
+      debug("[FileBuffer::FileBuffer] filename: ("+filename_no_ext+") extension: ("+ext+")");
+
       //initializing and reading size and data from file buffer
       std::ifstream buffer;
       buffer.open(fileName.c_str(), std::ios::in | std::ios::binary | std::ios::ate);
@@ -114,30 +125,34 @@ class FileBuffer
       
       if (data.size() != dataSize)
       {debug("[FileBuffer::FileBuffer] read size mismatch, corrupt data vector");}
+      debug("[FileBuffer::FileBuffer] read data ("+fileName+"): "+std::to_string(dataSize)+" bytes");
 
       buffer.close();
     }
 
+    ~FileBuffer()
+    {
+      data.clear();
+    }
+
+    void clear()
+    {
+      data.clear();
+    }
+
     void set(size_t position)
     {
+      if ((position < 0) || (position > dataSize)) {return;}
+
       //sets pointer and saves new data for current byte and blob
       pointer= position;
       byte= data[pointer];
-      blob[0]= data[pointer];
-      blob[1]= data[pointer + 1];
-      blob[2]= data[pointer + 2];
     }
 
     uint8_t getb()
     {
       //get byte
       return byte;
-    }
-
-    uint8_t* getw()
-    {
-      //get blob
-      return blob;
     }
 
     size_t getp()
