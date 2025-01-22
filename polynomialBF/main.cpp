@@ -3,6 +3,7 @@
 #include "binaryReader.cpp"
 #include "crc.cpp"
 #include <chrono>
+#include <cmath>
 #include <csignal>
 #include <cstddef>
 #include <cstdint>
@@ -45,10 +46,10 @@ std::string getHashRate(int64_t p1, uint32_t oldCRC)
   const int64_t p2= std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count();
   int64_t ping= p2 - p1;
   long intDur= ping;
-  long seconds= intDur / 1000;
+  float_t seconds= intDur / 1000;
   uint32_t amt= currentCRC - oldCRC;
   int hashed= amt;
-  int hash_one_sec= 0;
+  float_t hash_one_sec= 0;
   if (!(seconds == 0)) {hash_one_sec= hashed / seconds;}
 
   return std::to_string(hash_one_sec)+"h/s";
