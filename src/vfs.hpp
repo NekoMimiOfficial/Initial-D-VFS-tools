@@ -7,8 +7,6 @@
 #include <string>
 #include <vector>
 
-using namespace std;
-
 bool checkXBB(FileBuffer file);
 
 class XBBstruct
@@ -47,6 +45,8 @@ namespace VFSreunpack
   void filesANA(FileBuffer file);
   void infoANA(FileBuffer file);
   void extractANA(FileBuffer file);
+
+  void pack(std::string dir, std::string packName);
 }
 
 #endif // !__HEADER_VFS

@@ -15,7 +15,6 @@
 
 namespace fs= std::filesystem;
 
-
 using svec= std::vector<std::string>;
 using bvec= std::vector<uint8_t>;
 using lvec= std::vector<uint32_t>;
@@ -205,7 +204,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   svec boxb;
   for (size_t i= 0; i < int(fc); i++)
   {
-    sprint(to_string(packs[i].data[0]));
+    sprint(std::to_string(packs[i].data[0]));
     uint32_t crchash= crc32(packs[i].data, 0xffffffff);
     
     boxb.push_back(packs[i].fileName);
@@ -372,7 +371,7 @@ void VFSreunpack::filesANA(FileBuffer file)
     filenames.push_back(uc2s(fnameinunint8));
   }
 
-  box.setf("file count: "+to_string(fc));
+  box.setf("file count: "+std::to_string(fc));
   box.setb(filenames);
   box.render();
 }
@@ -394,7 +393,7 @@ void VFSreunpack::infoANA(FileBuffer file)
   std::vector<ANAstruct> ANAfiles;
 
   //box contents
-  vector<std::string> writeBody;
+  std::vector<std::string> writeBody;
 
   for (size_t i= 0; i < fc; i++)
   {
@@ -403,7 +402,7 @@ void VFSreunpack::infoANA(FileBuffer file)
     file.PTRstart= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
     file.PTRend= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
 
-    vector<uint8_t> getFileName;
+    std::vector<uint8_t> getFileName;
     while (1)
     {
       uint8_t rb= reader.read();
@@ -423,7 +422,7 @@ void VFSreunpack::infoANA(FileBuffer file)
   {
     writeBody.push_back(ana.filename);
     writeBody.push_back(str("~") * ana.filename.length());
-    writeBody.push_back("[index]                 ["+to_string(ana.index)+"/"+to_string(fc)+"]");
+    writeBody.push_back("[index]                 ["+std::to_string(ana.index)+"/"+std::to_string(fc)+"]");
     writeBody.push_back("[start pointer]         "+l2h(ana.PTRstart));
     writeBody.push_back("[end pointer]           "+l2h(ana.PTRend));
 
@@ -432,7 +431,7 @@ void VFSreunpack::infoANA(FileBuffer file)
   }
 
   box.setb(writeBody);
-  box.setf("file count: "+to_string(fc));
+  box.setf("file count: "+std::to_string(fc));
   box.render();
 }
 
@@ -451,7 +450,7 @@ void VFSreunpack::extractANA(FileBuffer file)
   std::vector<ANAstruct> ANAfiles;
 
   //box contents
-  vector<std::string> writeBody;
+  std::vector<std::string> writeBody;
 
   for (size_t i= 0; i < fc; i++)
   {
@@ -460,7 +459,7 @@ void VFSreunpack::extractANA(FileBuffer file)
     file.PTRstart= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
     file.PTRend= ( (reader.read()) | (reader.read() << 8) | (reader.read() << 16) | (reader.read() << 24) );
 
-    vector<uint8_t> getFileName;
+    std::vector<uint8_t> getFileName;
     while (1)
     {
       uint8_t rb= reader.read();
@@ -482,7 +481,7 @@ void VFSreunpack::extractANA(FileBuffer file)
     uint32_t toRead= ANAfiles[i].PTRend;
     while (1)
     {ANAfiles[i].data.push_back(reader.read()); if (toRead == 0){break;}else{toRead--;}}
-    debug("[VFSreunpack::extractANA] pushed data of size ("+to_string(ANAfiles[i].data.size())+") to file: "+ANAfiles[i].filename+" i:"+to_string(ANAfiles[i].index));
+    debug("[VFSreunpack::extractANA] pushed data of size ("+std::to_string(ANAfiles[i].data.size())+") to file: "+ANAfiles[i].filename+" i:"+std::to_string(ANAfiles[i].index));
     debug("                          ptr end:"+l2h(ANAfiles[i].PTRend));
   }
 
@@ -495,9 +494,9 @@ void VFSreunpack::extractANA(FileBuffer file)
 
   for (ANAstruct ana : ANAfiles)
   {
-    std::string filename= "./EXTRACTED/" + file.filename_no_ext + "/" + ana.filename + "(" + to_string(ana.index) + ").gim";
+    std::string filename= "./EXTRACTED/" + file.filename_no_ext + "/" + ana.filename + "(" + std::to_string(ana.index) + ").gim";
     save2file(ana.data, filename);
     sprint("Extracted file: "+filename);
-    debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+to_string(ana.data.size())+")bytes => "+filename);
+    debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+std::to_string(ana.data.size())+")bytes => "+filename);
   }
 }

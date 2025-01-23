@@ -1,51 +1,52 @@
 #ifndef __SO_CRC
 #define __SO_CRC
 
+#include "crc.hpp"
+#include "crcHashmap.cpp"
 #include "utils.cpp"
 #include <cstddef>
 #include <cstdint>
-#include <iostream>
-#include <string>
 #include <vector>
 
-/*CRC32::CRC32(std::vector<uint8_t> i) : data{std::move(i)} {}*/
-/**/
-/*std::vector<uint8_t> CRC32::hash()*/
-/*{*/
-/*  std::vector<uint32_t> tableList;*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableOffset32.begin(), CRChashMap::tableOffset32.end());*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableOffset40.begin(), CRChashMap::tableOffset40.end());*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableOffset48.begin(), CRChashMap::tableOffset48.end());*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableOffset56.begin(), CRChashMap::tableOffset56.end());*/
-/**/
-/*  tableList.insert(tableList.end(), CRChashMap::tableLZMA0.begin(), CRChashMap::tableLZMA0.end());*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableLZMA1.begin(), CRChashMap::tableLZMA1.end());*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableLZMA2.begin(), CRChashMap::tableLZMA2.end());*/
-/*  tableList.insert(tableList.end(), CRChashMap::tableLZMA3.begin(), CRChashMap::tableLZMA3.end());*/
-/**/
-/*  uint32_t crc= 0xffffffff;*/
-/*  for (size_t i= 0; i < data.size(); i++)*/
-/*  {*/
-/*    uint32_t key= (crc ^ data[i]) & 0xFF;*/
-/*    crc= tableList[key] ^ (crc >> 8);*/
-/*  }*/
-/*  debug("[CRC32::hash] hash signature returned: "+l2h(crc));*/
-/*  std::vector<uint8_t> res;*/
-/*  uint8_t* constr= new uint8_t[4];*/
-/*  *(uint32_t*)&constr= crc;*/
-/*  res.push_back(constr[0]);*/
-/*  res.push_back(constr[1]);*/
-/*  res.push_back(constr[2]);*/
-/*  res.push_back(constr[3]);*/
-/**/
-/*  return res;*/
-/*}*/
+CRCtable32::CRCtable32(std::vector<uint8_t> i) : data{std::move(i)} {}
+
+void CRCtable32::hash()
+{
+  std::vector<std::vector<uint32_t>> tableList;
+  tableList.push_back(CRChashMap::tableOffset32);
+  tableList.push_back(CRChashMap::tableOffset40);
+  tableList.push_back(CRChashMap::tableOffset48);
+  tableList.push_back(CRChashMap::tableOffset56);
+
+  tableList.push_back(CRChashMap::tableLZMA0);
+  tableList.push_back(CRChashMap::tableLZMA1);
+  tableList.push_back(CRChashMap::tableLZMA2);
+  tableList.push_back(CRChashMap::tableLZMA3);
+
+  for (std::vector<uint32_t> table : tableList)
+  {
+    uint32_t crc= 0xffffffff;
+    for (size_t i= 0; i < data.size(); i++)
+    {
+      crc = (crc >> 8) ^ table[(crc & 0xff) ^ data[i]];
+    }
+    crc ^= 0xffffffff;
+    debug("[CRCtable32::hash] hash signature returned: "+l2h(crc));
+    uint8_t* output= new uint8_t[4];
+
+    output[0]= (uint8_t) (crc >> 24);
+    output[1]= (uint8_t) (crc >> 16);
+    output[2]= (uint8_t) (crc >> 8);
+    output[3]= (uint8_t) (crc);
+
+    crc_collection.push_back(output);
+  }
+}
+
 unsigned int crc32(std::vector<uint8_t> data, uint32_t poly)
 {
   unsigned int crc = 0xFFFFFFFF;
   size_t size= data.size();
-  /*sprint(std::to_string(data[0]));*/
-
   for (size_t i = 0; i < size; i++)
   {
     uint8_t byte = data[i];

@@ -4,14 +4,15 @@
 #include <cstdint>
 #include <vector>
 
-class CRC32
+class CRCtable32
 {
   private:
     std::vector<uint8_t> data;
+    std::vector<uint8_t*> crc_collection;
 
   public:
-    CRC32(std::vector<uint8_t> i);
-    std::vector<uint8_t> hash();
+    CRCtable32(std::vector<uint8_t> i);
+    void hash();
 };
 
 #endif // !__HEADER_CRC
