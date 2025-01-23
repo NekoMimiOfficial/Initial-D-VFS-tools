@@ -25,7 +25,8 @@ void eraseLines(int count) {
     }
 }
 
-uint32_t crcKomp= 0x03252feb;
+/*uint32_t crcKomp= 0x03252feb;*/
+uint32_t crcKomp= 0xae81f093;
 uint32_t currentCRC= 0x00000001;
 
 void savePoly()
@@ -85,7 +86,7 @@ int main (int argc, char *argv[])
     if (komp == crcKomp) {box.setf("found poly: "+l2h(currentCRC)); exit(0);}
     currentCRC++;
     box.setb("Hashing in progress..");
-    if ((currentCRC % 0xFF) == 0){box.setf(getHashRate(epochTS, epochCRC));savePoly(); eraseLines(8); box.render();
+    if ((currentCRC % 0xFFFF) == 0){box.setf(getHashRate(epochTS, epochCRC));savePoly(); eraseLines(8); box.render();
     epochTS= std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch()).count(); epochCRC= currentCRC;}
 
   }
