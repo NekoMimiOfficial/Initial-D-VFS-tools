@@ -1,5 +1,8 @@
-cmake_minimum_required(VERSION 3.2.0)
+cmake_minimum_required(VERSION 3.5.0)
 project(initial-d-vfs-tools)
+
+set (CMAKE_CXX_STANDARD_REQUIRED 20)
+set (CMAKE_CXX_STANDARD 20)
 
 set (FullOutputDir "${CMAKE_SOURCE_DIR}/build/${CMAKE_BUILD_TYPE}")
 set (CMAKE_ARCHIVE_OUTPUT_DIRECTORY "${FullOutputDir}/static libs")
