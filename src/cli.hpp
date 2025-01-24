@@ -18,6 +18,8 @@ namespace CLI
   void files();
   void info();
   void extract();
+
+  void packT();
   void packXBB();
   void packANA();
 }

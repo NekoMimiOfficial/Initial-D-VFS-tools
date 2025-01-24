@@ -54,18 +54,31 @@ void mainCLI(int argc, char* argv[])
     if (carg == "--extract")
     {extractRun= true;}
 
-    if (carg.rfind("--vfs=", 0) == 0)
+    if (starts_with(carg, "--vfs="))
     {
       VFSfile= "";
-      for (int i= carg.rfind("=", 0); i <= carg.length(); i++)
+      for (int i= carg.rfind("=", carg.npos); i <= carg.length(); i++)
       {VFSfile += carg[i+1];}
+      debug("[mainCLI] --vfs: "+VFSfile);
       if (std::filesystem::exists(VFSfile)) {passedVFS= true;}
+    }
+
+    if (starts_with(carg, "--pack="))
+    {
+      packType= 0;
+      std::string PTS= "";
+      for (int i= carg.rfind("=", carg.npos); i <= carg.length(); i++)
+      {PTS += carg[i+1];}
+      if (PTS == "XBB") {packType= 1;}
+      if (PTS == "ANA") {packType= 2;}
+      packRun= true;
     }
   }
 
   if (filesRun) {CLI::files();}
   if (infoRun) {CLI::info();}
   if (extractRun) {CLI::extract();}
+  if (packRun) {CLI::packT();}
 
   return;
 }
@@ -117,6 +130,20 @@ void CLI::extract()
 void CLI::packXBB()
 {
   if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
+}
+
+void CLI::packANA()
+{
+  if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
+}
+
+void CLI::packT()
+{
+  if (packType == 0) {bprint("wrong option, --pack=[XBB/ANA]"); exit(1);}
+  if (packType == 1) {CLI::packXBB();}
+  if (packType == 2) {CLI::packANA();}
+
+  else {bprint("A miracle happened, it's your unlucky day!"); exit(66);}
 }
 
 void CLI::help()

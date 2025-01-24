@@ -164,8 +164,18 @@ void VFSreunpack::infoXBB(FileBuffer file)
     {
       slightlyLessDirtyFileName[i]= dirtyFileName[i];
     }
-    debug("[VFSreunpack::infoXBB] filename delivered: "+uc2s(slightlyLessDirtyFileName));
-    filenames.push_back(uc2s(slightlyLessDirtyFileName));
+    std::string fn= uc2s(slightlyLessDirtyFileName);
+
+    //fix absurd bug causing buffers that shouldnt even run to merge with the filename
+    //ps: this fix limits extension lenths to 3, including hard limiting it (in case the ext is 2 chars long)
+    int dotLocation= fn.rfind('.', fn.npos);
+    std::string cleanFN= "";
+    for (int i= 0; i < (dotLocation + 4); i++)
+    {cleanFN += fn[i];}
+    fn= cleanFN;
+
+    debug("[VFSreunpack::infoXBB] filename delivered: "+fn);
+    filenames.push_back(fn);
   }
 
   //set data for each struct
@@ -204,7 +214,6 @@ void VFSreunpack::infoXBB(FileBuffer file)
   svec boxb;
   for (size_t i= 0; i < int(fc); i++)
   {
-    sprint(std::to_string(packs[i].data[0]));
     uint32_t crchash= crc32(packs[i].data, 0xffffffff);
     
     boxb.push_back(packs[i].fileName);
@@ -368,7 +377,17 @@ void VFSreunpack::filesANA(FileBuffer file)
     uint8_t* fnameinunint8= new uint8_t[fnb.size()];
     for (int i= 0; i < fnb.size(); i++)
     {fnameinunint8[i]= fnb[i];}
-    filenames.push_back(uc2s(fnameinunint8));
+    std::string fn= uc2s(fnameinunint8);
+
+    //fix absurd bug causing buffers that shouldnt even run to merge with the filename
+    //ps: this fix limits extension lenths to 3, including hard limiting it (in case the ext is 2 chars long)
+    int dotLocation= fn.rfind('.', fn.npos);
+    std::string cleanFN= "";
+    for (int i= 0; i < (dotLocation + 4); i++)
+    {cleanFN += fn[i];}
+    fn= cleanFN;
+
+    filenames.push_back(fn);
   }
 
   box.setf("file count: "+std::to_string(fc));
@@ -412,7 +431,18 @@ void VFSreunpack::infoANA(FileBuffer file)
     uint8_t* fileNameArray= new uint8_t[getFileName.size()];
     for (size_t i= 0; i < getFileName.size(); i++)
     {fileNameArray[i]= getFileName[i];}
-    file.filename= uc2s(fileNameArray);
+    std::string fn= uc2s(fileNameArray);
+
+    //fix absurd bug causing buffers that shouldnt even run to merge with the filename
+    //ps: this fix limits extension lenths to 3, including hard limiting it (in case the ext is 2 chars long)
+    int dotLocation= fn.rfind('.', fn.npos);
+    std::string cleanFN= "";
+    for (int i= 0; i < (dotLocation + 4); i++)
+    {cleanFN += fn[i];}
+    fn= cleanFN;
+
+
+    file.filename= fn;
     delete[] fileNameArray;
 
     ANAfiles.push_back(file);
@@ -469,7 +499,17 @@ void VFSreunpack::extractANA(FileBuffer file)
     uint8_t* fileNameArray= new uint8_t[getFileName.size()];
     for (size_t i= 0; i < getFileName.size(); i++)
     {fileNameArray[i]= getFileName[i];}
-    file.filename= uc2s(fileNameArray);
+    std::string fn= uc2s(fileNameArray);
+    
+    //fix absurd bug causing buffers that shouldnt even run to merge with the filename
+    //ps: this fix limits extension lenths to 3, including hard limiting it (in case the ext is 2 chars long)
+    int dotLocation= fn.rfind('.', fn.npos);
+    std::string cleanFN= "";
+    for (int i= 0; i < (dotLocation + 4); i++)
+    {cleanFN += fn[i];}
+    fn= cleanFN;
+
+    file.filename= fn;
     delete[] fileNameArray;
 
     ANAfiles.push_back(file);

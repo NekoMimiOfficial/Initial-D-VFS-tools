@@ -16,8 +16,8 @@
 using str= std::string;
 using ifIterator= std::istream_iterator<uint8_t>;
 
-std::string __version__= "1.0.1";
-bool __APP_DEBUG__= false;
+std::string __version__= "1.0.2";
+bool __APP_DEBUG__= true;
 
 std::string uc2s(uint8_t *str)
 //[unsigned char to string] converts a uint8_t array to a string
@@ -48,6 +48,11 @@ std::string i2h(uint8_t ui)
   return "0x"+std::to_string(lookup);
 }
 
+bool starts_with(std::string str, std::string startValue)
+{
+  return (str.rfind(startValue, 0) == 0);
+}
+
 void sprint(std::string msg)
 {
   std::cout << msg << "\n";
@@ -55,7 +60,9 @@ void sprint(std::string msg)
 
 void debug(std::string msg)
 {
-  if (__APP_DEBUG__){std::cout << "[DEBUG] " << msg;} //defined from cmake
+  std::string returnChar= "\n";
+  if (starts_with(msg, "<NNL>")) {returnChar= "";}
+  if (__APP_DEBUG__){std::cout << "[DEBUG] " << msg << returnChar;} //defined from cmake
 }
 
 str operator * (str a, unsigned int b) {
