@@ -3,17 +3,21 @@
 #include "utils.cpp"
 #include "vfs.hpp"
 #include <cstdlib>
+#include <filesystem>
 #include <string>
 #include <vector>
 
 using str= std::string;
 using vec= std::vector<str>;
 
-bool arg= false;
+bool passedVFS= false;
+bool passedPath= false;
 bool filesRun= false;
 bool infoRun= false;
 bool extractRun= false;
+bool packRun= false;
 std::string VFSfile;
+short packType= 0;
 
 void bprint(str txt)
 {
@@ -50,23 +54,12 @@ void mainCLI(int argc, char* argv[])
     if (carg == "--extract")
     {extractRun= true;}
 
-    if (carg == "--vfs")
+    if (carg.rfind("--vfs=", 0) == 0)
     {
-      if (i+1 > argc)
-      {
-        bprint("No arguments after --vfs, expected filename");
-        exit(1);
-      }
-      std::string nextARG(argv[i+1]);
-      if (nextARG.rfind("--", 0) == 0)
-      {
-        bprint("Expected filename after --vfs");
-        exit(1);
-      }
-      arg= true;
-      VFSfile= nextARG;
-      i++;
-      continue;
+      VFSfile= "";
+      for (int i= carg.rfind("=", 0); i <= carg.length(); i++)
+      {VFSfile += carg[i+1];}
+      if (std::filesystem::exists(VFSfile)) {passedVFS= true;}
     }
   }
 
@@ -79,7 +72,7 @@ void mainCLI(int argc, char* argv[])
 
 void CLI::files()
 {
-  if (!(arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+  if (!(passedVFS)) {bprint("no file specified or it doesn't exist, please use --vfs=path/to/file.bin"); exit(1);}
 
   debug("[CLI::files] extracting filenames from: "+VFSfile);
   FileBuffer filesBuff(VFSfile);
@@ -95,7 +88,7 @@ void CLI::files()
 
 void CLI::info()
 {
-  if (!(arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+  if (!(passedVFS)) {bprint("no file specified or it doesn't exist, please use --vfs=path/to/file.bin"); exit(1);}
 
   debug("[CLI::info] showing info for files from: "+VFSfile);
   FileBuffer infoBuff(VFSfile);
@@ -109,7 +102,7 @@ void CLI::info()
 
 void CLI::extract()
 {
-  if (!(arg)) {bprint("no file specified, please use --vfs path/to/file.bin"); exit(1);}
+  if (!(passedVFS)) {bprint("no file specified or doesn't exist, please use --vfs=path/to/file.bin"); exit(1);}
 
   debug("[CLI::extract] extracting files from: "+VFSfile);
   FileBuffer buff(VFSfile);
@@ -119,6 +112,11 @@ void CLI::extract()
   {VFSreunpack::extractXBB(buff);}
   if (type == 2) //ANA
   {VFSreunpack::extractANA(buff);}
+}
+
+void CLI::packXBB()
+{
+  if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
 }
 
 void CLI::help()
@@ -133,7 +131,11 @@ void CLI::help()
   hb.push_back("--files     shows files inside a VFS");
   hb.push_back("--info      shows information about a VFS");
   hb.push_back("--extract   extract the files from a VFS");
+  hb.push_back("--pack      pack files into (ana/xbb)");
+  hb.push_back("    --pack=ANA        packs into ANA");
+  hb.push_back("    --pack=XBB        packs into XBB");
   hb.push_back("--vfs       set the VFS file to work on");
+  hb.push_back("    --vfs=file.bin    VFS file to extract");
   box.setb(hb);
   box.setf("provided by the catgirrrs :3");
   box.seto("help");

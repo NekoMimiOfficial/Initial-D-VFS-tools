@@ -18,6 +18,8 @@ namespace CLI
   void files();
   void info();
   void extract();
+  void packXBB();
+  void packANA();
 }
 
 #endif // !__HEADER_CLI
