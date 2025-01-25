@@ -17,6 +17,7 @@ bool infoRun= false;
 bool extractRun= false;
 bool packRun= false;
 std::string VFSfile;
+std::string PACKpath;
 short packType= 0;
 
 void bprint(str txt)
@@ -28,19 +29,19 @@ void bprint(str txt)
   box.render();
 }
 
-void mainCLI(int argc, char* argv[])
+void mainCLI(int pargc, char* pargv[])
 {
-  if (argc < 1)
+  if (pargc < 1)
   {
     bprint("No args provided, run --help for more info.");
     exit(0);
   }
 
   
-  for (int i= 1; i <= argc; i++)
+  for (int i= 1; i <= pargc; i++)
   {
-    std::string carg= argv[i];
-    debug("[mainCLI] argument: "+ carg+" ["+std::to_string(i)+"/"+std::to_string(argc)+"]");
+    std::string carg= pargv[i];
+    debug("[mainCLI] argument: "+ carg+" ["+std::to_string(i)+"/"+std::to_string(pargc)+"]");
 
     if (carg == "--help")
     {CLI::help(); exit(0);}
@@ -57,8 +58,8 @@ void mainCLI(int argc, char* argv[])
     if (starts_with(carg, "--vfs="))
     {
       VFSfile= "";
-      for (int i= carg.rfind("=", carg.npos); i <= carg.length(); i++)
-      {VFSfile += carg[i+1];}
+      for (int i= carg.rfind("=", carg.npos)+1; i < carg.length(); i++)
+      {VFSfile += carg[i];}
       debug("[mainCLI] --vfs: "+VFSfile);
       if (std::filesystem::exists(VFSfile)) {passedVFS= true;}
     }
@@ -67,11 +68,22 @@ void mainCLI(int argc, char* argv[])
     {
       packType= 0;
       std::string PTS= "";
-      for (int i= carg.rfind("=", carg.npos); i <= carg.length(); i++)
-      {PTS += carg[i+1];}
+      for (int i= carg.rfind("=", carg.npos)+1; i < carg.length(); i++)
+      {PTS += carg[i];}
+      debug("[mainCLI] --pack: "+PTS);
       if (PTS == "XBB") {packType= 1;}
       if (PTS == "ANA") {packType= 2;}
+      debug("[mainCLI] pack type: "+std::to_string(packType));
       packRun= true;
+    }
+
+    if (starts_with(carg, "--path="))
+    {
+      PACKpath= "";
+      for (int i= carg.rfind("=", carg.npos)+1; i < carg.length(); i++)
+      {PACKpath += carg[i];}
+      debug("[mainCLI] --path: "+PACKpath);
+      if (std::filesystem::exists(PACKpath)) {passedPath= true;}
     }
   }
 
@@ -130,18 +142,20 @@ void CLI::extract()
 void CLI::packXBB()
 {
   if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
+  if (!std::filesystem::is_directory(PACKpath)) {bprint("--path should point to a directory, not a file."); exit(1);}
 }
 
 void CLI::packANA()
 {
   if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
+  if (!std::filesystem::is_directory(PACKpath)) {bprint("--path should point to a directory, not a file."); exit(1);}
 }
 
 void CLI::packT()
 {
   if (packType == 0) {bprint("wrong option, --pack=[XBB/ANA]"); exit(1);}
-  if (packType == 1) {CLI::packXBB();}
-  if (packType == 2) {CLI::packANA();}
+  else if (packType == 1) {CLI::packXBB();}
+  else if (packType == 2) {CLI::packANA();}
 
   else {bprint("A miracle happened, it's your unlucky day!"); exit(66);}
 }
