@@ -46,7 +46,7 @@ namespace VFSreunpack
   void infoANA(FileBuffer file);
   void extractANA(FileBuffer file);
 
-  void pack(std::string dir, std::string packName);
+  void pack(std::string dir, short packType);
 }
 
 #endif // !__HEADER_VFS

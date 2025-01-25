@@ -143,12 +143,16 @@ void CLI::packXBB()
 {
   if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
   if (!std::filesystem::is_directory(PACKpath)) {bprint("--path should point to a directory, not a file."); exit(1);}
+
+  VFSreunpack::pack(PACKpath, packType);
 }
 
 void CLI::packANA()
 {
   if (!(passedPath)) {bprint("path not passed or doesn't exist"); exit(1);}
   if (!std::filesystem::is_directory(PACKpath)) {bprint("--path should point to a directory, not a file."); exit(1);}
+
+  VFSreunpack::pack(PACKpath, packType);
 }
 
 void CLI::packT()

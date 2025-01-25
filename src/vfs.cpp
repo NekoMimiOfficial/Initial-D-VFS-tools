@@ -539,4 +539,21 @@ void VFSreunpack::extractANA(FileBuffer file)
     sprint("Extracted file: "+filename);
     debug("[VFSreunpack::extractANA] {"+l2h(ana.PTRstart)+" -> "+l2h(ana.PTRstart+ana.PTRend)+"} ("+std::to_string(ana.data.size())+")bytes => "+filename);
   }
+
+  }
+
+void VFSreunpack::pack(std::string dir, short packType)
+{
+  //funny secret memory corruption flag
+  if (!(packType == 1) && !(packType == 2)) {sprint("Fat-ass (fatal) Error, Acheivement unlocked: \"How did we get here?\""); exit(1);}
+
+  //creating the file buffer
+  std::vector<uint8_t> output;
+  output.reserve(0x20); //alloc header
+
+  //XBB flags
+  if (packType == 1) {output[0x04]= 0x01;}
+
+  //ANA flags
+  if (packType == 2) {output[0x04]= 0x0F; output[0x0D]= 0x01;}
 }
