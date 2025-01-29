@@ -1,5 +1,3 @@
-#include <atomic>
-#include <chrono>
 #include <cstddef>
 #include <cstdint>
 #include <cstdlib>
@@ -45,13 +43,13 @@ str p7= "000";
 str pt= "000";
 
 uint32_t t0= 0x00000000;
-uint32_t t1= 0x02000000;
-uint32_t t2= 0x04000000;
-uint32_t t3= 0x06000000;
-uint32_t t4= 0x08000000;
-uint32_t t5= 0x0A000000;
-uint32_t t6= 0x0C000000;
-uint32_t t7= 0x0E000000;
+uint32_t t1= 0x20000000;
+uint32_t t2= 0x40000000;
+uint32_t t3= 0x60000000;
+uint32_t t4= 0x80000000;
+uint32_t t5= 0xA0000000;
+uint32_t t6= 0xC0000000;
+uint32_t t7= 0xE0000000;
 
 uint32_t crc_hash= 0x2492c3ca;
 vec8 crc_data= 
@@ -220,48 +218,48 @@ void worker(short thread, BoxRender r)
     case 0:
       s= t0;
       ps= 0x00000000;
-      e= 0x02000000;
+      e= 0x20000000;
       break;
 
     case 1:
       s= t1;
-      ps= 0x02000000;
-      e= 0x04000000;
+      ps= 0x20000000;
+      e= 0x40000000;
       break;
 
     case 2:
       s= t2;
-      ps= 0x04000000;
-      e= 0x06000000;
+      ps= 0x40000000;
+      e= 0x60000000;
       break;
 
     case 3:
       s= t3;
-      ps= 0x06000000;
-      e= 0x08000000;
+      ps= 0x60000000;
+      e= 0x80000000;
       break;
 
     case 4:
       s= t4;
-      ps= 0x08000000;
-      e= 0x0A000000;
+      ps= 0x80000000;
+      e= 0xA0000000;
       break;
 
     case 5:
       s= t5;
-      ps= 0x0A000000;
-      e= 0x0C000000;
+      ps= 0xA0000000;
+      e= 0xC0000000;
       break;
 
     case 6:
       s= t6;
-      ps= 0x0C000000;
-      e= 0x0E000000;
+      ps= 0xC0000000;
+      e= 0xE0000000;
       break;
 
     case 7:
       s= t7;
-      ps= 0x0E000000;
+      ps= 0xE0000000;
       e= 0xFFFFFFFF;
       break;
   }
@@ -271,7 +269,7 @@ void worker(short thread, BoxRender r)
     uint32_t t_c_poly= crc32(crc_data, ind);
     if (ind % 0xFFFF == 0)
     {
-      int percentage= (ind-ps) * 0x64 / 0x01FFFFFF;
+      int percentage= (ind-ps) * 0x64 / 0xFFFFFFFF;
       str spcnt= std::to_string(percentage);
       if (spcnt.length() == 1) {spcnt= "00"+spcnt;}
       else if (spcnt.length() == 2) {spcnt= "0"+spcnt;}
