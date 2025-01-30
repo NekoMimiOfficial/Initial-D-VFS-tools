@@ -269,7 +269,7 @@ void worker(short thread, BoxRender r)
     uint32_t t_c_poly= crc32(crc_data, ind);
     if (ind % 0xFFFF == 0)
     {
-      int percentage= (ind-ps) * 0x64 / 0xFFFFFFFF;
+      int percentage= (ind-ps) * 0x64 / 0x20000000;
       str spcnt= std::to_string(percentage);
       if (spcnt.length() == 1) {spcnt= "00"+spcnt;}
       else if (spcnt.length() == 2) {spcnt= "0"+spcnt;}
