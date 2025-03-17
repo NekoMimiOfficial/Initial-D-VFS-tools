@@ -23,11 +23,7 @@ def calculate_checksums(file_path, crc32, adler32):
             # Update Adler-32 checksum
             adler32 = zlib.adler32(data, adler32)
 
-    # Convert checksums to hexadecimal format
-    crc32_hex = format(crc32 & 0xFFFFFFFF, '08X')  # Ensure it is 8 hex digits
-    adler32_hex = format(adler32 & 0xFFFFFFFF, '08X')  # Ensure it is 8 hex digits
-
-    return crc32_hex, adler32_hex
+    return crc32, adler32
 
 def worker(i, c, steps):
     r= c
@@ -46,7 +42,7 @@ def worker(i, c, steps):
         r= r+1
 
         if r%10000 == 0:
-            print(f"[W{str(i)}] P:{str(r*100/steps)[4]}% C:{hex(r)}")
+            print(f"[W{str(i)}] P:{str(r*100/steps)[4]}% C:{hex(r)} HC:{hex(crc32_checksum)} HA:{hex(adler32_checksum)}")
             nm.write(str(r), f"thread{str(i)}-save.txt")
 
         if r == steps:
@@ -60,7 +56,7 @@ def stopper(sig, frame):
 
 def constr(i, s):
     if os.path.exists(f"thread{str(i)}-save.txt"):
-        c= nm.read("thread{str(i)}-save.txt")
+        c= int(nm.read("thread{str(i)}-save.txt"))
         return multiprocessing.Process(target=worker, args=[i, c, s])
     else:
         return multiprocessing.Process(target=worker, args=[i, s*i, s*(i+1)])
