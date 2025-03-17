@@ -35,10 +35,12 @@ def worker(i, c, steps):
         crc32_checksum, adler32_checksum = calculate_checksums(file_path, r, r)
         if crc32_checksum == 0x03252feb:
             print("crc32 found!  "+str(r))
+            nm.write(str(r), f"thread{str(i)}-poly-c32.txt")
             break
 
         if adler32_checksum == 0x03252feb:
             print("adler32 found!   "+str(r))
+            nm.write(str(r), f"thread{str(i)}-poly-a32.txt")
             break
 
         r= r+1
