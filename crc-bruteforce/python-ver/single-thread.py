@@ -1,4 +1,5 @@
 import zlib
+from os.path import exists
 from NekoMimi import utils as nm
 
 def calculate_checksums(file_path, crc32, adler32):
@@ -20,11 +21,14 @@ def calculate_checksums(file_path, crc32, adler32):
 
 if __name__ == '__main__':
     i= 0
+    if exists("ss-save.txt"):
+        i= int(nm.read("ss-save.txt"))
     while True:
         c, a= calculate_checksums("./rivalface.bin", i, i)
         i= i+1
         if i%10000 == 0:
             print(f"I:{str(i)} | H:{hex(i)} | C:{hex(c)} | A:{hex(a)}")
+            nm.write(str(i), "ss-save.txt")
 
         if c == 0x03252feb:
             print("C:"+str(i))
