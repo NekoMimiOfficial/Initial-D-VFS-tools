@@ -17,7 +17,7 @@ using str= std::string;
 using ifIterator= std::istream_iterator<uint8_t>;
 
 std::string __version__= "1.0.2";
-bool __APP_DEBUG__= true;
+bool __APP_DEBUG__= false;
 
 std::string uc2s(uint8_t *str)
 //[unsigned char to string] converts a uint8_t array to a string

@@ -45,7 +45,7 @@
 
 unsigned int crc32(std::vector<uint8_t> data, uint32_t poly)
 {
-  unsigned int crc = 0xFFFFFFFF;
+  unsigned int crc = 0x00000000;
   size_t size= data.size();
   for (size_t i = 0; i < size; i++)
   {

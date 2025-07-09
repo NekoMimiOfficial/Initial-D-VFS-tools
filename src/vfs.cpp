@@ -214,7 +214,7 @@ void VFSreunpack::infoXBB(FileBuffer file)
   svec boxb;
   for (size_t i= 0; i < int(fc); i++)
   {
-    uint32_t crchash= crc32(packs[i].data, 0xffffffff);
+    uint32_t crchash= crc32(packs[i].data, 0x001B563C);
     
     boxb.push_back(packs[i].fileName);
     boxb.push_back((packs[i].fileName.length()*str("~")) );
