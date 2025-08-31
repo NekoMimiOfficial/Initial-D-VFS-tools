@@ -4,6 +4,15 @@ this is a tool to extract and repack the virtual filesystem for initial D on the
 this tool supports unpacking the VFS including XBB and ANA files  
 packing custom files is almost complete and does exist however until the polynomial is cracked the crc will be mismatched and the game wont start  
 
+> [!IMPORTANT]
+> This project is in a big rewrite phase, please wait till both this and [the headers](https://github.com/NekoMimiOfficial/Initial-D-VFS-Headers) are completed  
+> Most instructions will be changed and some external (in house) libraries will be needed  
+> If no progress is being done here perhaps it's at the headers repo  
+
+> [!NOTE]
+> This project is soon to be rewritten, when so it will be Debian only compatible  
+> Meaning it will work on only Debian based Linux distributions  
+
 # running  
 all params could be found in the `--help` option  
 to extract files from an XBB/ANA file:  
@@ -40,7 +49,8 @@ However not satisfied, the cat wanted more, the entire reason this project start
 All was left was to calculate the crc32, so an efficient and powerful bruteforce tool was created that managed to complete over 25 thousand hashes per second!!!  
 It was a marvelous tool and so begun the journey to crack the polynomial  
 The evil enemy standing in face of this project's completion, Neko and its friend MJ spun up their cores and went on fighting to find the hostage polynomial  
-In the end they emerged out victorious and went on to place the last piece of the puzzle which completes this project  
+In the end they emerged *dead* and had to find a different route...  
+Well... with the power of reincarnation they stood up again and sought to try a different path, sadly we may not know how it went exactly as we'll have to wait for the next story...  
 Searching for "The End." my young readers? oh are you so wrong!  
 The story will never end here as I said it goes on beyond hell, the hellish task of creating appealing patched textures and patching the non texture parts of the game still remains on our noble swordsmen, they might have won the battle, but not the war...  
 what comes next is up to them, and we end *this* story here, wishing that our swordsmen return safe winning their war.  
@@ -52,3 +62,4 @@ https://github.com/derplayer/Initial-D-PSP-Tools/wiki/Reserve-engineering-Writeu
 # links  
 Neko's links are found at [neko's github profile](https://github.com/NekoMimiOfficial/NekoMimiOfficial)  
 Main IDSS ENG patch project server: [link](http://discord.gg/W9fgesMaau)  
+Main Lab where Neko is found: [link](https://discord.gg/KFwKPmXJAP)  
