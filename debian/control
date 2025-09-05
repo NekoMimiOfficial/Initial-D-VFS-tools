@@ -1,0 +1,10 @@
+Package: idss-tools
+Version: 2.0.0
+Architecture: amd64
+Installed-Size: 30
+Maintainer: NekoMimiOfficial <nekomimi@tilde.team>
+Section: utils
+Depends: libnmpp-dev, libidssvfs
+Priority: optional
+Homepage: http://nekomimi.tilde.team
+Description: C++ headers for the Initial D street stage vfs file extraction

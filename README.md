@@ -16,18 +16,36 @@ packing custom files is almost complete and does exist however until the polynom
 # running  
 all params could be found in the `--help` option  
 to extract files from an XBB/ANA file:  
-`./initial-d-vfs-tools --extract --vfs=vfs_file.extension`  
+`idss-tools -e FILE -o OUTPUT_DIR`  
 
 to pack an XBB file:  
-`./initial-d-vfs-tools --pack=XBB --path=directory_including_the_files`  
+`Not implemented (flag -p)`  
 
-to pack an ANA file:
-`./initial-d-vfs-tools --pack=ANA --path=directory_including_the_files`  
+to pack an ANA file:  
+`Not implemented (flag -p)`  
+
+# Installation  
+The tools are currently made only for debian based distros (yet you can try to manually compile each step and dependency)  
+You can install the project by adding the following apt repository with the following commands:  
+```sh
+wget -O- https://nekomimi.tilde.team/nekomimiofficial.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/nekomimiofficial-archive-keyring.gpg
+echo "deb [signed-by=/usr/share/keyrings/nekomimiofficial-archive-keyring.gpg] https://nekomimi.tilde.team/ stable main" | sudo tee /etc/apt/sources.list.d/nekomimiofficial.list
+sudo apt update
+sudo apt install idss-tools
+```
 
 # building  
+You'll need the following build deps:  
+- cmake  
+- python3  
+- dpkg-dev  
+
+And you'll need the following libraries:
+- NekoMimi++ [here](https://github.com/NekoMimiOfficial/NekoMimi-plus-plus)  
+- IDSS VFS Headers [here](https://github.com/NekoMimiOfficial/Initial-D-VFS-Headers)   
+
 ```sh
-cmake -L ./ \
-make
+./build.sh
 ```
 due to the many issues we are facing with windows and msvc this project will need to be built in WSL if you're planning to build it on windows  
 The files will be found in the `build/` directory  

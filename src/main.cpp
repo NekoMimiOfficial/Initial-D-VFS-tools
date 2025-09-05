@@ -9,8 +9,11 @@
 #include <cstdlib>
 #include <filesystem>
 #include <iostream>
+#include <sstream>
 #include <string>
 #include <vector>
+
+std::string HELP_MSG= "";
 
 struct AppOptions
 {
@@ -38,6 +41,13 @@ std::string parseArgs(int argc, char* argv[], AppOptions& options)
             {
                 return "Error: -o flag requires a directory path.";
             }
+        }else if (arg == "--version")
+        {
+          return "Initial D VFS Tools v2.0.0\nNekoMimiOfficial 2025(c) Nekocense";
+        }
+        else if (arg == "--help")
+        {
+          return HELP_MSG;
         }
         else if (arg[0] == '-')
         {
@@ -62,14 +72,6 @@ std::string parseArgs(int argc, char* argv[], AppOptions& options)
                         return error_msg;
                 }
             }
-        }
-        else if (arg == "--version")
-        {
-          return "Initial D VFS Tools v2.0.0";
-        }
-        else if (arg == "--help")
-        {
-          return "No help message for now";
         }
         else
         {
@@ -161,6 +163,22 @@ void extXBB(AppOptions options)
 
 int main (int argc, char *argv[])
 {
+  std::stringstream ss;
+  ss << "Usage:\n"
+     << "~~~~~~\n"
+     << "idss-tools [option] FILE [-o] OUTPUT\n\n"
+     << "Flags:\n"
+     << "~~~~~~\n"
+     << "-e     extract files from a VFS file\n"
+     << "-i     info about a VFS file\n"
+     << "-p     pack folder into a VFS file\n"
+     << "-o     used with -e or -p only to specify output\n\n"
+     << "Examples:\n"
+     << "~~~~~~~~~\n"
+     << "idss-tools -e game2d.bin -o game2d_extracted\n"
+     << "idss-tools -i saveicon_r.bin\n";
+  HELP_MSG= ss.str();
+
   AppOptions options;
   std::string errorMessage = parseArgs(argc, argv, options);
 

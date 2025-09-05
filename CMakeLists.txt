@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.5.0)
-project(idss-tools VERSION 1.0.0)
+project(idss-tools VERSION 2.0.0)
 
 set (CMAKE_CXX_STANDARD_REQUIRED 20)
 set (CMAKE_CXX_STANDARD 20)
